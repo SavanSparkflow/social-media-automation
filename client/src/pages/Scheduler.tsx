@@ -41,17 +41,31 @@ const Scheduler = () => {
   // Publishing / Retrying state for individual post buttons
   const [actionLoadingId, setActionLoadingId] = useState<string | null>(null);
 
-  const fetchPosts = async () => {
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  const fetchPosts = async (silent = false) => {
+    if (!silent) setIsRefreshing(true);
     try {
       const { data } = await api.get("/api/posts");
       setPosts(data);
     } catch (error: any) {
-      toast.error(error.response?.data?.message || error?.message || "Failed to fetch posts");
+      if (!silent) {
+        toast.error(error.response?.data?.message || error?.message || "Failed to fetch posts");
+      }
+    } finally {
+      if (!silent) setIsRefreshing(false);
     }
   };
 
   useEffect(() => {
     fetchPosts();
+
+    // Auto-poll every 5 seconds to sync status in real time when scheduled posts publish
+    const interval = setInterval(() => {
+      fetchPosts(true);
+    }, 5000);
+
+    return () => clearInterval(interval);
   }, []);
 
   const scheduled = posts.filter((p) => p.status === "scheduled");
@@ -474,9 +488,19 @@ const Scheduler = () => {
           <div className="flex items-center gap-2.5 px-5 py-4 border-b border-slate-100">
             <CalendarDaysIcon className="size-4 text-slate-600" />
             <h3 className="text-slate-900 text-sm font-semibold">Scheduled Queue</h3>
-            <span className="ml-auto text-xs font-bold bg-slate-100 text-slate-700 px-2.5 py-0.5 rounded-full">
-              {scheduled.length}
-            </span>
+            <div className="ml-auto flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => fetchPosts(false)}
+                title="Refresh posts"
+                className="p-1 text-slate-400 hover:text-slate-600 rounded-md transition"
+              >
+                <RotateCwIcon className={`size-3.5 ${isRefreshing ? "animate-spin text-red-500" : ""}`} />
+              </button>
+              <span className="text-xs font-bold bg-slate-100 text-slate-700 px-2.5 py-0.5 rounded-full">
+                {scheduled.length}
+              </span>
+            </div>
           </div>
 
           <div className="max-h-80 overflow-y-auto divide-y divide-slate-100">

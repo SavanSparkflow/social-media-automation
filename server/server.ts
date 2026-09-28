@@ -1,6 +1,7 @@
 import "dotenv/config";
 import express, { NextFunction, Request, Response } from 'express';
 import cors from "cors";
+import morgan from "morgan";
 import connectDB from "./config/db.js";
 import authRouter from "./routes/authRoutes.js";
 import socialAuthRouter from "./routes/socialAuthRoutes.js";
@@ -15,7 +16,8 @@ const app = express();
 await connectDB();
 
 // Middleware
-app.use(cors())
+app.use(morgan("dev"));
+app.use(cors());
 app.use(express.json());
 
 const port = process.env.PORT || 3000;
