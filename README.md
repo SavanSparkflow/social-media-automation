@@ -14,7 +14,8 @@ A modern, full-stack AI-powered social media management and post scheduling plat
   - One-click post deletion and instant scheduling.
 - 🔗 **Multi-Platform Social OAuth**: Connect and sync accounts with **LinkedIn, Twitter/X, Instagram, and Facebook** powered by **Zernio API**.
 - ⏰ **Automated Post Scheduler**: Schedule posts with custom media (images/videos), dates, times, and target platforms. An automated background worker publishes posts on time using `node-cron`.
-- 📊 **Dashboard & Activity Tracker**: Real-time stats on scheduled posts, connected accounts, and recent publishing activity.
+- 🔑 **Bring Your Own API Keys (BYOK)**: Users can configure and securely store their own personal API keys (`GEMINI_API_KEY`, `LEONARDO_API_KEY`, `ZERNIO_API_KEY`) directly from the UI (Settings -> API Keys) with masked show/hide visibility toggles.
+- ⚙️ **User Profile & Security Settings**: Full profile name customization, customizable avatar color styles, and password management.
 - 🔐 **Secure Authentication**: User registration and login protected with JWT and bcrypt password hashing.
 
 ---

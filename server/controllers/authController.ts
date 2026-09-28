@@ -141,3 +141,57 @@ export const changePassword = async (req: AuthRequest, res: Response): Promise<v
         res.status(500).json({ message: error.message || "Internal server error" });
     }
 }
+
+// Get User API Keys
+// GET /api/auth/api-keys
+export const getApiKeys = async (req: AuthRequest, res: Response): Promise<void> => {
+    try {
+        const user = await User.findById(req.user._id);
+        if (!user) {
+            res.status(404).json({ message: "User not found" });
+            return;
+        }
+
+        res.status(200).json({
+            geminiApiKey: user.geminiApiKey || "",
+            leonardoApiKey: user.leonardoApiKey || "",
+            zernioApiKey: user.zernioApiKey || "",
+            hasSystemGemini: !!process.env.GEMINI_API_KEY,
+            hasSystemLeonardo: !!process.env.LEONARDO_API_KEY,
+            hasSystemZernio: !!process.env.ZERNIO_API_KEY,
+        });
+    } catch (error: any) {
+        console.error(error);
+        res.status(500).json({ message: error.message || "Internal server error" });
+    }
+};
+
+// Update User API Keys
+// PUT /api/auth/api-keys
+export const updateApiKeys = async (req: AuthRequest, res: Response): Promise<void> => {
+    try {
+        const { geminiApiKey, leonardoApiKey, zernioApiKey } = req.body;
+        const user = await User.findById(req.user._id);
+
+        if (!user) {
+            res.status(404).json({ message: "User not found" });
+            return;
+        }
+
+        user.geminiApiKey = geminiApiKey !== undefined ? geminiApiKey.trim() : user.geminiApiKey;
+        user.leonardoApiKey = leonardoApiKey !== undefined ? leonardoApiKey.trim() : user.leonardoApiKey;
+        user.zernioApiKey = zernioApiKey !== undefined ? zernioApiKey.trim() : user.zernioApiKey;
+
+        await user.save();
+
+        res.status(200).json({
+            message: "API keys updated successfully",
+            geminiApiKey: user.geminiApiKey,
+            leonardoApiKey: user.leonardoApiKey,
+            zernioApiKey: user.zernioApiKey,
+        });
+    } catch (error: any) {
+        console.error(error);
+        res.status(500).json({ message: error.message || "Internal server error" });
+    }
+};

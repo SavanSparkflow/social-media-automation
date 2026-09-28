@@ -1,6 +1,6 @@
 // Get All Accounts
 
-import zernio from "../config/zernio.js";
+import { getZernioClient } from "../config/zernio.js";
 import { AuthRequest } from "../middlewares/authMiddleware.js";
 import { Account } from "../models/Account.js";
 import { Response } from "express";
@@ -45,6 +45,7 @@ export const disconnectAccount = async (req: AuthRequest, res: Response): Promis
         }
         if (account.zernioAccountId) {
             try {
+                const zernio = getZernioClient(req.user?.zernioApiKey);
                 await zernio.accounts.deleteAccount({ path: { accountId: account.zernioAccountId } })
             } catch (error: any) {
                 res.status(500).json({ message: error?.response?.data?.message || error.message || "Failed to delete from Zernio" });

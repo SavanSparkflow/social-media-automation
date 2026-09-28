@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import zernio from "../config/zernio.js";
+import { getZernioClient } from "../config/zernio.js";
 import { User } from "../models/User.js";
 import { Account } from "../models/Account.js";
 import { AuthRequest } from "../middlewares/authMiddleware.js";
@@ -7,6 +7,7 @@ import { AuthRequest } from "../middlewares/authMiddleware.js";
 // Helper to ensure user has a Zernio Profile
 const getOrCreateZernioProfile = async (user: any): Promise<string> => {
     try {
+        const zernio = getZernioClient(user.zernioApiKey);
         const result = await zernio.profiles.listProfiles();
         const data = result.data as any;
         const profiles: any[] = Array.isArray(data) ? data : data.profiles || data.data || [];
@@ -47,6 +48,7 @@ export const generateAuthUrl = async (req: AuthRequest, res: Response): Promise<
         const origin = req.headers.origin;
         const redirectURL = `${origin}/accounts`;
 
+        const zernio = getZernioClient(req.user?.zernioApiKey);
         const result = await zernio.connect.getConnectUrl({
             path: { platform: platform as any },
             query: {
@@ -76,6 +78,7 @@ export const generateAuthUrl = async (req: AuthRequest, res: Response): Promise<
 export const syncAccounts = async (req: AuthRequest, res: Response): Promise<void> => {
     try {
         const profileId = await getOrCreateZernioProfile(req.user);
+        const zernio = getZernioClient(req.user?.zernioApiKey);
         const result = await zernio.accounts.listAccounts({
             query: { profileId } as any
         })

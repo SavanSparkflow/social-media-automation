@@ -1,10 +1,14 @@
 import cron from "node-cron";
 import { Post } from "../models/Post.js";
 import { Account } from "../models/Account.js";
-import zernio from "../config/zernio.js";
+import { User } from "../models/User.js";
+import { getZernioClient } from "../config/zernio.js";
 import { ActivityLog } from "../models/ActivityLog.js";
 
 export const publishPostToZernio = async (post: any) => {
+    const user = await User.findById(post.user);
+    const zernio = getZernioClient(user?.zernioApiKey);
+
     const accounts = await Account.find({
         user: post.user,
         platform: { $in: post.platforms },

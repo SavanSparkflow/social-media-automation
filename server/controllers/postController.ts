@@ -42,10 +42,10 @@ export const generatePost = async (req: AuthRequest, res: Response): Promise<voi
     try {
         const { prompt, tone, generateImage } = req.body;
 
-        const apikey = process.env.GEMINI_API_KEY;
+        const apikey = req.user?.geminiApiKey || process.env.GEMINI_API_KEY;
 
         if (!apikey) {
-            res.status(400).json({ message: "Gemini API key is missing. please add it to your server/.env file." })
+            res.status(400).json({ message: "Gemini API key is missing. Please configure it in Settings -> API Keys or add it to server/.env file." });
             return;
         }
 
@@ -71,9 +71,9 @@ export const generatePost = async (req: AuthRequest, res: Response): Promise<voi
         let mediaUrl = "";
         if (generateImage) {
             try {
-                const leonardokey = process.env.LEONARDO_API_KEY;
+                const leonardokey = req.user?.leonardoApiKey || process.env.LEONARDO_API_KEY;
                 if (!leonardokey) {
-                    throw new Error("Leonardo API key is missing. Please add it to your server/.env file.");
+                    throw new Error("Leonardo API key is missing. Please configure it in Settings -> API Keys or add it to server/.env file.");
                 }
                 if (leonardokey) {
                     // Use Leonardo.ai for image generation
