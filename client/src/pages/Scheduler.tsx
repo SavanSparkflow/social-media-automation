@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react"
-import { dummyPostsData, PLATFORMS } from "../assets/assets";
+import { PLATFORMS } from "../assets/assets";
 import { ArrowRightIcon, CalendarDaysIcon, CalendarIcon, ClockIcon, SendIcon, XIcon } from "lucide-react";
+import api from "../api/axios";
+import toast from "react-hot-toast";
 
 
 const Scheduler = () => {
@@ -13,13 +15,16 @@ const Scheduler = () => {
   const [loading, setLoading] = useState(false);
 
   const fetchPosts = async () => {
-    setPosts(dummyPostsData);
+    try {
+      const { data } = await api.get("/api/posts")
+      setPosts(data)
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || error?.message || "Failed to fetch posts");
+    }
   }
 
   useEffect(() => {
-    (async () => await fetchPosts())();
-    const interval = setInterval(async () => await fetchPosts(), 1000);
-    return () => clearInterval(interval);
+    fetchPosts();
   }, []);
 
   const scheduled = posts.filter((p) => p.status === "scheduled");
@@ -29,11 +34,46 @@ const Scheduler = () => {
 
   const handleSchedule = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (selectedPlatform.length === 0) {
+      toast.error("Select atleast one platform");
+      return;
+    }
+    if (!scheduleDate || !scheduleTime) {
+      toast.error("Select both date and time");
+      return;
+    }
+    if (selectedPlatform.includes('instagram') && !mediaFile) {
+      toast.error("Instaram requires an images or videos");
+      return;
+    }
+
+    const scheduledFor = new Date(`${scheduleDate}T${scheduleTime}`).toISOString();
+
+    const formData = new FormData();
+    formData.append("platforms", JSON.stringify(selectedPlatform));
+    formData.append("content", content);
+    formData.append("scheduledFor", scheduledFor);
+    if (mediaFile) formData.append("media", mediaFile);
+
     setLoading(true);
-    setTimeout(() => {
+    try {
+       await api.post("/api/posts", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data"
+        }
+      })
+      toast.success("Post scheduled successfully");
+      setContent("");
+      setScheduleDate("");
+      setScheduleTime("");
+      setSelectedPlatform([]);
+      setMediaFile(null);
+      fetchPosts();
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || error?.message || "Failed to schedule post");
+    } finally {
       setLoading(false);
-      setPosts((prev) => [...prev, dummyPostsData[0]])
-    }, 1000)
+    }
   }
 
   return (
@@ -140,7 +180,7 @@ const Scheduler = () => {
                     <div className="flex gap-1.5 items-center">
                       {post.platforms.map((pl: string) => {
                         const meta = PLATFORMS.find((p) => p.id === pl);
-                        return meta ? <meta.icon key={pl} className="size-3.5 text-slate-400" />: null
+                        return meta ? <meta.icon key={pl} className="size-3.5 text-slate-400" /> : null
                       })}
                     </div>
                     <div className="flex items-center gap-2">
@@ -171,7 +211,7 @@ const Scheduler = () => {
                     <div className="flex gap-1.5 items-center">
                       {post.platforms.map((pl: string) => {
                         const meta = PLATFORMS.find((p) => p.id === pl);
-                        return meta ? <meta.icon key={pl} className="size-3.5 text-slate-400" />: null
+                        return meta ? <meta.icon key={pl} className="size-3.5 text-slate-400" /> : null
                       })}
                     </div>
                     <div className="flex items-center gap-2">

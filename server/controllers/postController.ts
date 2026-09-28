@@ -207,3 +207,26 @@ export const schedulePost = async (req: AuthRequest, res: Response): Promise<voi
         res.status(500).json({ message: "Failed to schedule post" });
     }
 }
+
+// Delete generation
+// DELETE /api/posts/generations/:id
+export const deleteGeneration = async (req: AuthRequest, res: Response): Promise<void> => {
+    try {
+        const generation = await Generation.findById(req.params.id);
+        if (!generation) {
+            res.status(404).json({ message: "Generation not found" });
+            return;
+        }
+
+        if (generation.user.toString() !== req.user._id.toString()) {
+            res.status(401).json({ message: "Not authorized" });
+            return;
+        }
+
+        await generation.deleteOne();
+        res.status(200).json({ message: "Generation deleted successfully" });
+    } catch (error: any) {
+        console.error(error);
+        res.status(500).json({ message: "Failed to delete generation" });
+    }
+}

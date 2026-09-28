@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react"
-import { dummyGenerationData, PLATFORMS } from "../assets/assets";
-import { ArrowRightIcon, CalendarIcon, ClockIcon, HistoryIcon, Loader2Icon, TimerIcon, Wand2Icon, XIcon } from "lucide-react";
+import { PLATFORMS } from "../assets/assets";
+import { ArrowRightIcon, CalendarIcon, ChevronLeftIcon, ChevronRightIcon, ClockIcon, HistoryIcon, Loader2Icon, TimerIcon, Wand2Icon, XIcon } from "lucide-react";
+import api from "../api/axios";
+import toast from "react-hot-toast";
 
 
 const AIComposer = () => {
@@ -17,8 +19,18 @@ const AIComposer = () => {
   const [scheduleTime, setScheduleTime] = useState("");
   const [scheduling, setScheduling] = useState(false);
 
+  // Filter & Pagination state
+  const [selectedToneFilter, setSelectedToneFilter] = useState("All");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+
   const fetchGenerations = async () => {
-    setGenerations(dummyGenerationData);
+    try {
+      const { data } = await api.get("/api/posts/generations");
+      setGenerations(data);
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || error?.message || "Failed to fetch generations");
+    }
   }
 
   useEffect(() => {
@@ -26,21 +38,83 @@ const AIComposer = () => {
   }, [])
 
   const handleGenerate = async () => {
+    if (!prompt) {
+      toast.error("Enter a prompt");
+      return;
+    }
     setLoading(true);
-    setTimeout(() => {
+    try {
+      const { data } = await api.post("/api/posts/generate", {
+        prompt,
+        tone,
+        generateImage
+      })
+      setGenerations([data.generation, ...generations])
+      setActiveScheduler(data.generation);
+      setPrompt("");
+      toast.success("Content generated successfully");
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || error?.message || "Failed to generate content");
+    } finally {
       setLoading(false);
-    }, 2000)
+    }
+  }
+
+  const handleDeleteGeneration = async (id: string) => {
+    try {
+      await api.delete(`/api/posts/generations/${id}`);
+      fetchGenerations();
+      toast.success("Generation deleted successfully");
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || error?.message || "Failed to delete generation");
+    }
   }
 
   const handleSchedule = async () => {
+    if (!activeScheduler) return;
+    if (selectedPlatform.length === 0) {
+      toast.error("Select atleast one platform")
+      return;
+    }
+    if (!scheduleDate || !scheduleTime) {
+      toast.error("Select a valid date and time");
+      return;
+    }
+
+    const scheduledFor = new Date(`${scheduleDate}T${scheduleTime}`).toISOString();
     setScheduling(true);
-    setTimeout(() => {
+    try {
+      await api.post("/api/posts", {
+        content: activeScheduler.content,
+        mediaUrl: activeScheduler.mediaUrl,
+        mediaType: activeScheduler.mediaType,
+        platforms: selectedPlatform,
+        scheduledFor,
+        status: "scheduled"
+      })
+
+      toast.success("AI Generated Post Scheduled successfully");
+      setActiveScheduler(null);
+      setScheduleDate("");
+      setScheduleTime("");
+      setSelectedPlatform([]);
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || error?.message || "Failed to schedule post");
+    } finally {
       setScheduling(false);
-      // setActiveScheduler(null);
-    }, 2000)
+    }
   }
 
   const tones = ["Professional", "Creative", "Funny", "Minimalist", "Excited"];
+
+  // Filtered and Paginated Generations
+  const filteredGenerations = selectedToneFilter === "All"
+    ? generations
+    : generations.filter((g) => g.tone?.toLowerCase() === selectedToneFilter.toLowerCase());
+
+  const totalPages = Math.ceil(filteredGenerations.length / pageSize) || 1;
+  const startIndex = (currentPage - 1) * pageSize;
+  const paginatedGenerations = filteredGenerations.slice(startIndex, startIndex + pageSize);
 
 
   return (
@@ -81,15 +155,71 @@ const AIComposer = () => {
       </div>
       {/* AI Generated Posts */}
       <div className="space-y-6 pt-12 border-t border-slate-100">
-        <div className="flex items-center justify-between text-slate-600">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 text-slate-600">
           <div className="flex items-center gap-2">
             <HistoryIcon className="size-5" />
             <h2 className="text-xl">Recent Generations</h2>
+            <span className="text-xs text-slate-500 bg-slate-100 px-2 py-0.5 rounded-full font-medium">
+              {filteredGenerations.length} total
+            </span>
           </div>
-          <span className="text-sm text-slate-500 bg-slate-50 px-2">{generations.length} total</span>
+
+          <div className="flex items-center gap-2 text-xs text-slate-500">
+            <span>Show:</span>
+            <select
+              value={pageSize}
+              onChange={(e) => {
+                setPageSize(Number(e.target.value));
+                setCurrentPage(1);
+              }}
+              className="bg-white border border-slate-200 rounded-lg px-2.5 py-1.5 text-slate-700 outline-none focus:border-red-500 transition cursor-pointer font-medium"
+            >
+              {[10, 15, 20, 30, 40].map((size) => (
+                <option key={size} value={size}>
+                  {size} per page
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
+
+        {/* Tone Filter Pills */}
+        <div className="flex flex-wrap items-center gap-2">
+          {["All", ...tones].map((t) => {
+            const count =
+              t === "All"
+                ? generations.length
+                : generations.filter((g) => g.tone?.toLowerCase() === t.toLowerCase()).length;
+            const isSelected = selectedToneFilter === t;
+            return (
+              <button
+                key={t}
+                onClick={() => {
+                  setSelectedToneFilter(t);
+                  setCurrentPage(1);
+                }}
+                className={`px-3.5 py-1 rounded-full text-xs font-medium transition-all flex items-center gap-1.5 border ${
+                  isSelected
+                    ? "bg-red-500 border-red-500 text-white shadow-sm"
+                    : "bg-white border-slate-200 text-slate-600 hover:bg-slate-50 hover:border-slate-300"
+                }`}
+              >
+                <span>{t}</span>
+                <span
+                  className={`text-[10px] px-1.5 py-0.2 rounded-full ${
+                    isSelected ? "bg-white/20 text-white" : "bg-slate-100 text-slate-500"
+                  }`}
+                >
+                  {count}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Grid of Generations */}
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-          {generations.map((gen) => (
+          {paginatedGenerations.map((gen) => (
             <div key={gen._id} className="group bg-white rounded-2xl border border-slate-100 p-5 hover:border-red-200 transition-all relative overflow-hidden">
               <div className="flex flex-col h-full space-y-4">
                 <div className="flex items-center justify-between">
@@ -109,22 +239,72 @@ const AIComposer = () => {
                   <button onClick={() => setActiveScheduler(gen)} className="flex-1 bg-slate-100 hover:bg-red-500 hover:text-white text-slate-600 text-xs py-2.5 rounded-lg transition-all">
                     Schedule Post
                   </button>
+                  <button onClick={() => handleDeleteGeneration(gen._id)} className="p-2.5 bg-slate-100 hover:bg-red-100 text-slate-400 hover:text-red-500 rounded-lg transition-all" title="Delete Generation">
+                    <XIcon className="size-4" />
+                  </button>
                 </div>
               </div>
             </div>
           ))}
 
-          {
-            generations.length === 0 && (
-              <div className="col-span-full py-20 text-center space-y-2">
-                <div className="size-12 bg-slate-50 rounded-2xl flex items-center justify-center mx-auto text-slate-300">
-                  <Wand2Icon className="size-6" />
-                  <p className="text-slate-400 text-sm">No content generated yet. Try generating some content using the AI.</p>
-                </div>
+          {filteredGenerations.length === 0 && (
+            <div className="col-span-full py-20 text-center space-y-2">
+              <div className="size-12 bg-slate-50 rounded-2xl flex items-center justify-center mx-auto text-slate-300">
+                <Wand2Icon className="size-6" />
               </div>
-            )
-          }
+              <p className="text-slate-400 text-sm">
+                {generations.length === 0
+                  ? "No content generated yet. Try generating some content using the AI."
+                  : `No generations found with the "${selectedToneFilter}" tone.`}
+              </p>
+            </div>
+          )}
         </div>
+
+        {/* Pagination Controls */}
+        {filteredGenerations.length > pageSize && (
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 border-t border-slate-100 text-sm text-slate-500">
+            <div>
+              Showing <span className="font-medium text-slate-700">{startIndex + 1}</span> to{" "}
+              <span className="font-medium text-slate-700">{Math.min(startIndex + pageSize, filteredGenerations.length)}</span> of{" "}
+              <span className="font-medium text-slate-700">{filteredGenerations.length}</span> generations
+            </div>
+
+            <div className="flex items-center gap-1.5">
+              <button
+                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                disabled={currentPage === 1}
+                className="p-2 border border-slate-200 rounded-lg hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition"
+                title="Previous Page"
+              >
+                <ChevronLeftIcon className="size-4 text-slate-600" />
+              </button>
+
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                <button
+                  key={page}
+                  onClick={() => setCurrentPage(page)}
+                  className={`size-8 text-xs rounded-lg font-medium transition ${
+                    currentPage === page
+                      ? "bg-red-500 text-white shadow-sm"
+                      : "border border-slate-200 text-slate-600 hover:bg-slate-50"
+                  }`}
+                >
+                  {page}
+                </button>
+              ))}
+
+              <button
+                onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                disabled={currentPage === totalPages}
+                className="p-2 border border-slate-200 rounded-lg hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition"
+                title="Next Page"
+              >
+                <ChevronRightIcon className="size-4 text-slate-600" />
+              </button>
+            </div>
+          </div>
+        )}
       </div>
       {/* Scheduler Modal */}
       {activeScheduler && (

@@ -28,7 +28,7 @@ app.use("/api/auth", authRouter)
 app.use("/api/oauth", socialAuthRouter);
 app.use("/api/accounts", AccountsRouter);
 app.use("/api/posts", PostRouter);
-app.use("api/activity", ActivityRouter);
+app.use("/api/activity", ActivityRouter);
 
 // Initialize Scheduler
 initScheduler();
