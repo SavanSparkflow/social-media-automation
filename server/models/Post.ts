@@ -8,6 +8,7 @@ const PostSchema = new mongoose.Schema({
     platforms: { type: [String], enum: ["twitter", "linkedin", "facebook", "instagram", "facebook_page", "linkedin_page", "instagram_page", "instagram_business"] },
     scheduledFor: { type: Date, required: true },
     status: { type: String, enum: ["draft", "scheduled", "published", "failed"], default: "scheduled" },
+    errorMessage: { type: String },
 }, { timestamps: true });
 
 export const Post = mongoose.model("Post", PostSchema);

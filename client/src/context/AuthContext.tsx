@@ -5,6 +5,7 @@ interface User {
     _id: string;
     name: string;
     email: string;
+    avatarUrl?: string;
 }
 
 interface AuthContextType {
@@ -13,6 +14,7 @@ interface AuthContextType {
     isLoading: boolean;
     login: (userData: User, token: string) => void;
     logout: () => void;
+    updateUser: (userData: Partial<User>) => void;
     isAuthenticated: boolean;
 }
 
@@ -27,10 +29,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         const storedUser = localStorage.getItem("user")
         const storedToken = localStorage.getItem("token")
 
-        if (storedUser && storedToken) {
-            setUser(JSON.parse(storedUser))
-            setToken(storedToken)
-            api.defaults.headers.common['Authorization'] = `Bearer ${storedToken}`
+        if (storedUser && storedUser !== "undefined" && storedToken) {
+            try {
+                setUser(JSON.parse(storedUser))
+                setToken(storedToken)
+                api.defaults.headers.common['Authorization'] = `Bearer ${storedToken}`
+            } catch (e) {
+                console.error("Failed to parse stored user", e);
+            }
         }
 
         setIsLoading(false)
@@ -44,6 +50,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         api.defaults.headers.common['Authorization'] = `Bearer ${newToken}`
     }
 
+    const updateUser = (updatedData: Partial<User>) => {
+        setUser((prev) => {
+            if (!prev) return null;
+            const updated = { ...prev, ...updatedData };
+            localStorage.setItem("user", JSON.stringify(updated));
+            return updated;
+        });
+    }
+
     const logout = () => {
         setUser(null)
         setToken(null)
@@ -53,7 +68,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
 
     return (
-        <AuthContext.Provider value={{ user, token, isLoading, login, logout, isAuthenticated: !!token }}>
+        <AuthContext.Provider value={{ user, token, isLoading, login, logout, updateUser, isAuthenticated: !!token }}>
             {children}
         </AuthContext.Provider>
     )

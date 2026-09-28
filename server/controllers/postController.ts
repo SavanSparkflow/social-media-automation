@@ -7,6 +7,7 @@ import axios from "axios";
 import { cloudinary } from "../config/cloudinary.js";
 import { Generation } from "../models/Generation.js";
 import { Post } from "../models/Post.js";
+import { publishPostToZernio } from "../services/schedulerService.js";
 
 // Helper to poll Leonardo.ai
 const pollLeonardoJob = async (generationId: string, apikey: string) : Promise<string> => {
@@ -228,5 +229,123 @@ export const deleteGeneration = async (req: AuthRequest, res: Response): Promise
     } catch (error: any) {
         console.error(error);
         res.status(500).json({ message: "Failed to delete generation" });
+    }
+}
+
+// Delete scheduled or failed post
+// DELETE /api/posts/:id
+export const deletePost = async (req: AuthRequest, res: Response): Promise<void> => {
+    try {
+        const post = await Post.findById(req.params.id);
+        if (!post) {
+            res.status(404).json({ message: "Post not found" });
+            return;
+        }
+
+        if (post.user.toString() !== req.user._id.toString()) {
+            res.status(401).json({ message: "Not authorized" });
+            return;
+        }
+
+        await post.deleteOne();
+        res.status(200).json({ message: "Post deleted successfully" });
+    } catch (error: any) {
+        console.error(error);
+        res.status(500).json({ message: "Failed to delete post" });
+    }
+}
+
+// Update post
+// PUT /api/posts/:id
+export const updatePost = async (req: AuthRequest, res: Response): Promise<void> => {
+    try {
+        const post = await Post.findById(req.params.id);
+        if (!post) {
+            res.status(404).json({ message: "Post not found" });
+            return;
+        }
+
+        if (post.user.toString() !== req.user._id.toString()) {
+            res.status(401).json({ message: "Not authorized" });
+            return;
+        }
+
+        const { content, platforms, scheduledFor, removeMedia } = req.body;
+
+        if (content) post.content = content;
+        if (scheduledFor) post.scheduledFor = new Date(scheduledFor);
+
+        if (platforms) {
+            let parsedPlatforms = platforms;
+            if (typeof platforms === "string") {
+                try {
+                    parsedPlatforms = JSON.parse(platforms);
+                } catch (err) {
+                    parsedPlatforms = platforms.split(",");
+                }
+            }
+            post.platforms = parsedPlatforms;
+        }
+
+        if (removeMedia === "true" || removeMedia === true) {
+            post.mediaUrl = undefined;
+            post.mediaType = undefined;
+        }
+
+        if (req.file) {
+            const result = await new Promise<any>((resolve, reject) => {
+                const stream = cloudinary.uploader.upload_stream({ resource_type: "auto", folder: "social-scheduler" }, (error, result) => {
+                    if (error) reject(error);
+                    else resolve(result);
+                });
+                stream.end(req.file!.buffer);
+            });
+
+            post.mediaUrl = result.secure_url;
+            post.mediaType = result.resource_type === "video" ? "video" : "image";
+        }
+
+        // Reset status to scheduled if user updates a failed post
+        if (post.status === "failed") {
+            post.status = "scheduled";
+            post.errorMessage = undefined;
+        }
+
+        await post.save();
+        res.status(200).json({ message: "Post updated successfully", post });
+    } catch (error: any) {
+        console.error(error);
+        res.status(500).json({ message: "Failed to update post" });
+    }
+}
+
+// Publish post immediately (Publish Now / Retry)
+// POST /api/posts/:id/publish-now
+export const publishPostNow = async (req: AuthRequest, res: Response): Promise<void> => {
+    try {
+        const post = await Post.findById(req.params.id);
+        if (!post) {
+            res.status(404).json({ message: "Post not found" });
+            return;
+        }
+
+        if (post.user.toString() !== req.user._id.toString()) {
+            res.status(401).json({ message: "Not authorized" });
+            return;
+        }
+
+        try {
+            await publishPostToZernio(post);
+            res.status(200).json({ message: "Post published successfully", post });
+        } catch (err: any) {
+            const errorMsg = err?.response?.data?.message || err?.message || "Failed to publish post";
+            post.status = "failed";
+            post.errorMessage = errorMsg;
+            await post.save();
+            res.status(500).json({ message: errorMsg, post });
+        }
+    } catch (error: any) {
+        console.error(error);
+        res.status(500).json({ message: error.message || "Failed to publish post" });
     }
 }
