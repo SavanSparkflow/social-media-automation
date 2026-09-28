@@ -421,7 +421,7 @@ const Scheduler = () => {
               <span className="text-xs text-red-500">Check error details and retry</span>
             </div>
 
-            <div className="space-y-3 max-h-60 overflow-y-auto">
+            <div className="space-y-3 max-h-60 overflow-y-auto custom-scrollbar pr-1">
               {failed.map((post) => (
                 <div
                   key={post._id}
@@ -503,7 +503,7 @@ const Scheduler = () => {
             </div>
           </div>
 
-          <div className="max-h-80 overflow-y-auto divide-y divide-slate-100">
+          <div className="max-h-80 overflow-y-auto divide-y divide-slate-100 custom-scrollbar">
             {scheduled.length === 0 ? (
               <div className="py-12 text-center text-slate-400 text-sm">
                 No upcoming posts scheduled yet.
@@ -592,7 +592,7 @@ const Scheduler = () => {
             </span>
           </div>
 
-          <div className="max-h-72 overflow-y-auto divide-y divide-slate-100">
+          <div className="max-h-72 overflow-y-auto divide-y divide-slate-100 custom-scrollbar">
             {published.length === 0 ? (
               <div className="py-12 text-center text-slate-400 text-sm">
                 No posts published yet.

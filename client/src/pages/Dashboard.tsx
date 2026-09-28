@@ -90,7 +90,7 @@ const Dashboard = () => {
             <p className='text-slate-400 text-sm mt-1'>Connect accounts and schedule posts to see events here.</p>
           </div>
         ) : (
-          <div className='divide-y divide-slate-50'>
+          <div className='divide-y divide-slate-50 max-h-96 overflow-y-auto custom-scrollbar'>
             {activities.map((activity) => (
               <div key={activity._id} className='flex items-start gap-4 px-6 py-4 hover:bg-slate-50/50 transition-colors'>
                 <div className='size-9 rounded-xl flex items-center justify-center shrink-0 mt-0.5 bg-zinc-100 text-zinc-600'>
