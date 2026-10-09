@@ -8,6 +8,7 @@ import socialAuthRouter from "./routes/socialAuthRoutes.js";
 import AccountsRouter from "./routes/accountRoutes.js";
 import PostRouter from "./routes/postRoutes.js";
 import ActivityRouter from "./routes/activityRoutes.js";
+import leadMagnetRouter from "./routes/leadMagnetRoutes.js";
 import { initScheduler } from "./services/schedulerService.js";
 
 const app = express();
@@ -34,6 +35,7 @@ app.use("/api/oauth", socialAuthRouter);
 app.use("/api/accounts", AccountsRouter);
 app.use("/api/posts", PostRouter);
 app.use("/api/activity", ActivityRouter);
+app.use("/api/lead-magnets", leadMagnetRouter);
 
 // Initialize Scheduler
 initScheduler();

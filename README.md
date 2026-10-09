@@ -39,7 +39,13 @@ A high-performance, full-stack AI-driven social media management and autonomous 
 - AI deconstructs the **Psychological Hook Formula**, **Engagement Triggers**, and **Format Architecture**.
 - Automatically produces **3 unique, ready-to-publish variations** tailored specifically to your brand.
 
-### 5. 💳 Real-Time AI Credit & API Health Inspector
+### 5. 🎁 "Comment & Get" Auto-Lead Magnet Funnel Studio
+- Turn public comments into hot direct message leads automatically.
+- **AI Funnel Copilot**: Generates high-converting post copy with CTA, trigger keywords (e.g. `GUIDE`, `PDF`), 4 rotating natural comment replies, and personalized DM blueprints.
+- **Interactive Live Simulator**: Test triggers and watch live keyword detection, public replies, and DM deliveries in real-time.
+- **Captured Leads CRM**: Search, filter, and 1-click **Export Leads to CSV**.
+
+### 6. 💳 Real-Time AI Credit & API Health Inspector
 - **Free Credit System**: Built-in 50-credit starter quota with real-time UI credit meters and low-credit notifications.
 - **BYOK (Bring Your Own Key)**: Input your own Gemini API Key for **Unlimited 100% Free Generations**.
 - **Live Multi-API Inspector**: In Settings, verify connection health and live balance for:
@@ -47,11 +53,11 @@ A high-performance, full-stack AI-driven social media management and autonomous 
   - 🎨 **Leonardo.ai**: Live token balance query via `GET /api/rest/v1/me`.
   - 🔗 **Zernio Social API**: Social account sync and scheduling status.
 
-### 6. 🔗 Multi-Platform Social OAuth & Autonomous Scheduler
+### 7. 🔗 Multi-Platform Social OAuth & Autonomous Scheduler
 - Connect accounts seamlessly: **LinkedIn, Twitter/X, Instagram, and Facebook**.
 - Autonomous background scheduler powered by `node-cron` ensuring zero missed posting windows.
 
-### 7. 📄 Complete Marketing & Legal Suite
+### 8. 📄 Complete Marketing & Legal Suite
 - **Product Pages**: `/features`, `/how-it-works`, `/pricing`, `/changelog`
 - **Company Pages**: `/about`, `/blog`, `/careers`, `/press`
 - **Legal Compliance**: `/privacy`, `/terms`, `/security`, `/cookies`
@@ -190,7 +196,12 @@ Client runs on `http://localhost:5173`.
 | | `POST` | `/api/posts/campaign/generate-30-days`| Generate complete 30-day marketing plan | ✅ |
 | | `POST` | `/api/posts/campaign/batch-schedule` | 1-Click batch schedule all 30 campaign posts | ✅ |
 | | `POST` | `/api/posts/competitor/reverse-engineer`| Deconstruct viral post and get 3 brand variations | ✅ |
-| | `GET` | `/api/posts/generations` | Fetch paginated AI generations history | ✅ |
+| **Lead Magnet Funnels** | `GET` | `/api/lead-magnets` | Fetch all active campaigns & lead stats | ✅ |
+| | `POST` | `/api/lead-magnets` | Create new Lead Magnet automation | ✅ |
+| | `POST` | `/api/lead-magnets/ai-draft` | AI Copilot draft of post, keywords & DM | ✅ |
+| | `PUT` | `/api/lead-magnets/:id` | Update or pause/activate campaign | ✅ |
+| | `DELETE`| `/api/lead-magnets/:id` | Delete lead magnet campaign | ✅ |
+| | `POST` | `/api/lead-magnets/:id/test-trigger` | Live simulation trigger & DM test | ✅ |
 | **Scheduling** | `POST` | `/api/posts` | Schedule single post (with custom media) | ✅ |
 | | `GET` | `/api/posts` | Fetch scheduled / published post list | ✅ |
 | **Social Accounts**| `GET` | `/api/oauth/:platform/url` | Generate OAuth connection link | ✅ |

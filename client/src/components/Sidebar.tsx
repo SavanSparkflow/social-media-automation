@@ -1,4 +1,4 @@
-import { CalendarDaysIcon, CalendarRangeIcon, BrainCircuitIcon, LayoutDashboard, LogOutIcon, RepeatIcon, SettingsIcon, UserIcon, Wand2Icon } from 'lucide-react'
+import { CalendarDaysIcon, CalendarRangeIcon, BrainCircuitIcon, Gift, LayoutDashboard, LogOutIcon, RepeatIcon, SettingsIcon, UserIcon, Wand2Icon } from 'lucide-react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import AICreditBadge from './AICreditBadge'
@@ -17,6 +17,7 @@ const Sidebar = ({isOpen, setIsOpen} : {isOpen: boolean, setIsOpen: (val: boolea
         {name: "Repurposer", icon: RepeatIcon, path: "/repurpose"},
         {name: "30D Campaign", icon: CalendarRangeIcon, path: "/campaign"},
         {name: "Viral Decoder", icon: BrainCircuitIcon, path: "/competitor-decoder"},
+        {name: "Lead Magnets", icon: Gift, path: "/lead-magnets"},
         {name: "Settings", icon: SettingsIcon, path: "/settings"}
     ]
 

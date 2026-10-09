@@ -10,6 +10,7 @@ import Settings from "./pages/Settings";
 import ContentRepurposer from "./pages/ContentRepurposer";
 import CampaignPlanner from "./pages/CampaignPlanner";
 import CompetitorDecoder from "./pages/CompetitorDecoder";
+import LeadMagnetStudio from "./pages/LeadMagnetStudio";
 import { Toaster } from "react-hot-toast";
 
 // Public Informational Pages
@@ -65,6 +66,7 @@ export default function App() {
                     <Route path="/repurpose" element={<ContentRepurposer />} />
                     <Route path="/campaign" element={<CampaignPlanner />} />
                     <Route path="/competitor-decoder" element={<CompetitorDecoder />} />
+                    <Route path="/lead-magnets" element={<LeadMagnetStudio />} />
                     <Route path="/settings" element={<Settings />} />
                 </Route>
             </Routes>
