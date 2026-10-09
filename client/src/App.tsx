@@ -9,6 +9,21 @@ import AIComposer from "./pages/AIComposer";
 import Settings from "./pages/Settings";
 import { Toaster } from "react-hot-toast";
 
+// Public Informational Pages
+import PublicLayout from "./components/Home/PublicLayout";
+import FeaturesPage from "./pages/public/FeaturesPage";
+import HowItWorksPage from "./pages/public/HowItWorksPage";
+import PricingPage from "./pages/public/PricingPage";
+import ChangelogPage from "./pages/public/ChangelogPage";
+import AboutPage from "./pages/public/AboutPage";
+import BlogPage from "./pages/public/BlogPage";
+import CareersPage from "./pages/public/CareersPage";
+import PressPage from "./pages/public/PressPage";
+import PrivacyPage from "./pages/public/PrivacyPage";
+import TermsPage from "./pages/public/TermsPage";
+import SecurityPage from "./pages/public/SecurityPage";
+import CookiesPage from "./pages/public/CookiesPage";
+
 export default function App() {
     return (
         <>
@@ -16,6 +31,29 @@ export default function App() {
             <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/login" element={<Login />} />
+
+                {/* Public / Marketing / Legal Pages */}
+                <Route element={<PublicLayout />}>
+                    {/* Product */}
+                    <Route path="/features" element={<FeaturesPage />} />
+                    <Route path="/how-it-works" element={<HowItWorksPage />} />
+                    <Route path="/pricing" element={<PricingPage />} />
+                    <Route path="/changelog" element={<ChangelogPage />} />
+
+                    {/* Company */}
+                    <Route path="/about" element={<AboutPage />} />
+                    <Route path="/blog" element={<BlogPage />} />
+                    <Route path="/careers" element={<CareersPage />} />
+                    <Route path="/press" element={<PressPage />} />
+
+                    {/* Legal */}
+                    <Route path="/privacy" element={<PrivacyPage />} />
+                    <Route path="/terms" element={<TermsPage />} />
+                    <Route path="/security" element={<SecurityPage />} />
+                    <Route path="/cookies" element={<CookiesPage />} />
+                </Route>
+
+                {/* Authenticated Dashboard Area */}
                 <Route element={<Layout />}>
                     <Route path="/dashboard" element={<Dashboard />} />
                     <Route path="/accounts" element={<Accounts />} />
