@@ -5,7 +5,6 @@ import toast from 'react-hot-toast';
 import {
     UserIcon,
     LockIcon,
-    ShieldCheckIcon,
     SaveIcon,
     Loader2Icon,
     CheckCircle2Icon,
@@ -14,9 +13,12 @@ import {
     EyeOffIcon,
     ExternalLinkIcon,
     SparklesIcon,
-    InfoIcon
+    InfoIcon,
+    RefreshCwIcon,
+    ZapIcon,
+    AlertTriangleIcon,
+    XCircleIcon,
 } from 'lucide-react';
-import { Link } from 'react-router-dom';
 
 const AVATAR_OPTIONS = [
     { label: "Coral Sunset", bg: "from-red-500 to-pink-500" },
@@ -27,7 +29,7 @@ const AVATAR_OPTIONS = [
 ];
 
 const Settings = () => {
-    const { user, updateUser } = useAuth();
+    const { user, updateUser, refreshCredits } = useAuth();
     const [activeTab, setActiveTab] = useState<'profile' | 'security' | 'apikeys'>('profile');
 
     // Profile state
@@ -57,6 +59,14 @@ const Settings = () => {
     const [apiKeysLoading, setApiKeysLoading] = useState(false);
     const [apiKeysSaving, setApiKeysSaving] = useState(false);
 
+    // Live API Key Health & Balance State
+    const [checkingStatus, setCheckingStatus] = useState(false);
+    const [apiStatusResults, setApiStatusResults] = useState<{
+        gemini?: { status: "ACTIVE" | "EXHAUSTED" | "INVALID" | "NOT_CONFIGURED"; message: string; details?: any };
+        leonardo?: { status: "ACTIVE" | "EXHAUSTED" | "INVALID" | "NOT_CONFIGURED"; message: string; creditsRemaining?: number; subscriptionTokens?: number; details?: any };
+        zernio?: { status: "ACTIVE" | "EXHAUSTED" | "INVALID" | "NOT_CONFIGURED"; message: string; details?: any };
+    } | null>(null);
+
     // Password visibility toggles
     const [showGemini, setShowGemini] = useState(false);
     const [showLeonardo, setShowLeonardo] = useState(false);
@@ -75,10 +85,31 @@ const Settings = () => {
                 hasSystemLeonardo: !!data.hasSystemLeonardo,
                 hasSystemZernio: !!data.hasSystemZernio
             });
+            // Automatically check live status on load
+            checkLiveApiKeys(data.geminiApiKey, data.leonardoApiKey, data.zernioApiKey);
         } catch (error: any) {
             console.error("Failed to load API keys", error);
         } finally {
             setApiKeysLoading(false);
+        }
+    };
+
+    const checkLiveApiKeys = async (gKey?: string, lKey?: string, zKey?: string) => {
+        setCheckingStatus(true);
+        try {
+            const { data } = await api.post("/api/auth/api-keys/check-status", {
+                geminiApiKey: gKey !== undefined ? gKey : geminiKey,
+                leonardoApiKey: lKey !== undefined ? lKey : leonardoKey,
+                zernioApiKey: zKey !== undefined ? zKey : zernioKey,
+            });
+
+            if (data?.results) {
+                setApiStatusResults(data.results);
+            }
+        } catch (err) {
+            console.error("Failed to inspect API key live balance", err);
+        } finally {
+            setCheckingStatus(false);
         }
     };
 
@@ -148,13 +179,15 @@ const Settings = () => {
         e.preventDefault();
         setApiKeysSaving(true);
         try {
-            await api.put("/api/auth/api-keys", {
+            const { data } = await api.put("/api/auth/api-keys", {
                 geminiApiKey: geminiKey,
                 leonardoApiKey: leonardoKey,
                 zernioApiKey: zernioKey
             });
             toast.success("API keys saved securely!");
-            fetchApiKeys();
+            updateUser({ hasCustomGeminiKey: !!data.isUnlimited });
+            refreshCredits();
+            checkLiveApiKeys(geminiKey, leonardoKey, zernioKey);
         } catch (error: any) {
             toast.error(error.response?.data?.message || error?.message || "Failed to save API keys");
         } finally {
@@ -193,7 +226,7 @@ const Settings = () => {
                     }`}
                 >
                     <KeyIcon className="size-4" />
-                    API Keys
+                    API Keys & Balance
                 </button>
 
                 <button
@@ -215,34 +248,27 @@ const Settings = () => {
                     <form onSubmit={handleProfileUpdate} className="bg-white rounded-2xl border border-slate-200 p-6 md:p-8 space-y-6">
                         {/* Avatar Customizer */}
                         <div>
-                            <label className="block text-xs uppercase tracking-wider text-slate-500 font-semibold mb-3">Avatar Style</label>
-                            <div className="flex items-center gap-6">
-                                <div className={`size-16 rounded-full bg-gradient-to-br ${avatarBg} flex items-center justify-center text-white text-2xl font-bold shadow-md`}>
-                                    {name?.charAt(0).toUpperCase() || user?.name?.charAt(0).toUpperCase() || 'U'}
+                            <label className="block text-sm font-medium text-slate-700 mb-2">Profile Avatar Accent</label>
+                            <div className="flex items-center gap-4 flex-wrap">
+                                <div className={`size-14 rounded-2xl bg-gradient-to-br ${avatarBg} flex items-center justify-center text-white text-xl font-bold shadow-sm ring-2 ring-offset-2 ring-red-500/20`}>
+                                    {name ? name.charAt(0).toUpperCase() : 'U'}
                                 </div>
-                                <div className="space-y-2">
-                                    <div className="flex flex-wrap gap-2">
-                                        {AVATAR_OPTIONS.map((opt) => (
-                                            <button
-                                                key={opt.label}
-                                                type="button"
-                                                onClick={() => setAvatarBg(opt.bg)}
-                                                className={`size-8 rounded-full bg-gradient-to-br ${opt.bg} flex items-center justify-center transition-transform ${
-                                                    avatarBg === opt.bg ? 'ring-2 ring-red-500 ring-offset-2 scale-110' : 'hover:scale-105 opacity-80 hover:opacity-100'
-                                                }`}
-                                                title={opt.label}
-                                            >
-                                                {avatarBg === opt.bg && <CheckCircle2Icon className="size-4 text-white" />}
-                                            </button>
-                                        ))}
-                                    </div>
-                                    <p className="text-xs text-slate-400">Pick a gradient color scheme for your profile avatar.</p>
+                                <div className="flex items-center gap-2 flex-wrap">
+                                    {AVATAR_OPTIONS.map((opt) => (
+                                        <button
+                                            key={opt.label}
+                                            type="button"
+                                            onClick={() => setAvatarBg(opt.bg)}
+                                            className={`size-8 rounded-full bg-gradient-to-br ${opt.bg} transition-transform ${avatarBg === opt.bg ? 'scale-110 ring-2 ring-offset-2 ring-slate-800' : 'hover:scale-105 opacity-80 hover:opacity-100'}`}
+                                            title={opt.label}
+                                        />
+                                    ))}
                                 </div>
                             </div>
                         </div>
 
-                        {/* Name & Email Fields */}
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-slate-100">
+                        {/* User info fields */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
                                 <label className="block text-sm font-medium text-slate-700 mb-1.5">Full Name</label>
                                 <input
@@ -277,39 +303,33 @@ const Settings = () => {
                             </button>
                         </div>
                     </form>
-
-                    {/* Quick Access Card */}
-                    <div className="bg-gradient-to-r from-red-50 to-orange-50 border border-red-100 rounded-2xl p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                        <div className="flex items-center gap-3">
-                            <div className="p-2.5 bg-red-500 text-white rounded-xl">
-                                <ShieldCheckIcon className="size-5" />
-                            </div>
-                            <div>
-                                <h3 className="text-sm font-semibold text-slate-800">Connected Social Accounts</h3>
-                                <p className="text-xs text-slate-500">Manage OAuth credentials and sync platforms.</p>
-                            </div>
-                        </div>
-                        <Link
-                            to="/accounts"
-                            className="px-4 py-2 bg-white hover:bg-red-50 text-red-600 border border-red-200 rounded-xl text-xs font-medium transition shadow-xs"
-                        >
-                            View Accounts &rarr;
-                        </Link>
-                    </div>
                 </div>
             )}
 
             {/* API Keys Tab */}
             {activeTab === 'apikeys' && (
                 <div className="space-y-6">
-                    <div className="bg-blue-50/70 border border-blue-100 rounded-2xl p-5 flex items-start gap-3.5 text-blue-900 text-xs">
-                        <InfoIcon className="size-5 text-blue-600 shrink-0 mt-0.5" />
-                        <div className="space-y-1 leading-relaxed">
-                            <span className="font-semibold text-blue-950 text-sm block">Bring Your Own API Keys (BYOK)</span>
-                            <p className="text-blue-800">
-                                You can configure your personal API keys here for Google Gemini, Leonardo.ai, and Zernio. Your custom keys will take precedence over the system default environment keys and are stored securely.
-                            </p>
+                    {/* Header Notification */}
+                    <div className="bg-blue-50/70 border border-blue-100 rounded-2xl p-5 flex items-start justify-between gap-4 text-blue-900 text-xs">
+                        <div className="flex items-start gap-3.5">
+                            <InfoIcon className="size-5 text-blue-600 shrink-0 mt-0.5" />
+                            <div className="space-y-1 leading-relaxed">
+                                <span className="font-semibold text-blue-950 text-sm block">Live API Keys Health & Quota Inspector</span>
+                                <p className="text-blue-800">
+                                    You can check remaining credits, rate limits, and live connection status for your online API keys in real time.
+                                </p>
+                            </div>
                         </div>
+
+                        <button
+                            type="button"
+                            onClick={() => checkLiveApiKeys(geminiKey, leonardoKey, zernioKey)}
+                            disabled={checkingStatus}
+                            className="inline-flex items-center gap-1.5 bg-white text-blue-700 hover:bg-blue-100 border border-blue-200 font-semibold px-4 py-2 rounded-xl text-xs transition-all shadow-xs shrink-0"
+                        >
+                            <RefreshCwIcon className={`size-3.5 ${checkingStatus ? 'animate-spin' : ''}`} />
+                            {checkingStatus ? "Checking Live..." : "Refresh Live Balance"}
+                        </button>
                     </div>
 
                     {apiKeysLoading ? (
@@ -319,7 +339,7 @@ const Settings = () => {
                     ) : (
                         <form onSubmit={handleSaveApiKeys} className="bg-white rounded-2xl border border-slate-200 p-6 md:p-8 space-y-8">
                             {/* 1. Google Gemini API Key */}
-                            <div className="space-y-2">
+                            <div className="space-y-3">
                                 <div className="flex items-center justify-between flex-wrap gap-2">
                                     <div className="flex items-center gap-2">
                                         <SparklesIcon className="size-4 text-purple-500" />
@@ -327,12 +347,12 @@ const Settings = () => {
                                     </div>
                                     <div className="flex items-center gap-2">
                                         {geminiKey ? (
-                                            <span className="text-[11px] bg-emerald-50 text-emerald-700 border border-emerald-200 px-2 py-0.5 rounded-full font-medium">
-                                                Custom Key Active
+                                            <span className="text-[11px] bg-emerald-50 text-emerald-700 border border-emerald-200 px-2.5 py-0.5 rounded-full font-medium">
+                                                Custom Key (Unlimited Mode)
                                             </span>
                                         ) : systemKeys.hasSystemGemini ? (
                                             <span className="text-[11px] bg-slate-100 text-slate-600 border border-slate-200 px-2 py-0.5 rounded-full">
-                                                Using System Default Key
+                                                System Default Key
                                             </span>
                                         ) : (
                                             <span className="text-[11px] bg-amber-50 text-amber-700 border border-amber-200 px-2 py-0.5 rounded-full">
@@ -366,11 +386,35 @@ const Settings = () => {
                                         {showGemini ? <EyeOffIcon className="size-4" /> : <EyeIcon className="size-4" />}
                                     </button>
                                 </div>
-                                <p className="text-[11px] text-slate-400">Used for AI post text and social media caption generation (Gemini 2.5 Flash).</p>
+
+                                {/* Live Gemini Inspection Status Card */}
+                                {apiStatusResults?.gemini && (
+                                    <div className={`p-3 rounded-xl border text-xs flex items-start gap-2.5 ${
+                                        apiStatusResults.gemini.status === 'ACTIVE'
+                                            ? 'bg-emerald-50/70 border-emerald-200 text-emerald-800'
+                                            : apiStatusResults.gemini.status === 'EXHAUSTED'
+                                            ? 'bg-red-50 border-red-200 text-red-800'
+                                            : 'bg-amber-50 border-amber-200 text-amber-800'
+                                    }`}>
+                                        {apiStatusResults.gemini.status === 'ACTIVE' ? (
+                                            <CheckCircle2Icon className="size-4 text-emerald-600 shrink-0 mt-0.5" />
+                                        ) : apiStatusResults.gemini.status === 'EXHAUSTED' ? (
+                                            <AlertTriangleIcon className="size-4 text-red-600 shrink-0 mt-0.5" />
+                                        ) : (
+                                            <InfoIcon className="size-4 text-amber-600 shrink-0 mt-0.5" />
+                                        )}
+                                        <div className="flex-1">
+                                            <span className="font-semibold block">{apiStatusResults.gemini.message}</span>
+                                            <span className="text-[11px] text-slate-500 mt-0.5 block">
+                                                Powers Gemini 2.5 Flash post composition, repurposing, and 30-day campaigns.
+                                            </span>
+                                        </div>
+                                    </div>
+                                )}
                             </div>
 
                             {/* 2. Leonardo.ai API Key */}
-                            <div className="space-y-2 pt-4 border-t border-slate-100">
+                            <div className="space-y-3 pt-6 border-t border-slate-100">
                                 <div className="flex items-center justify-between flex-wrap gap-2">
                                     <div className="flex items-center gap-2">
                                         <SparklesIcon className="size-4 text-pink-500" />
@@ -383,7 +427,7 @@ const Settings = () => {
                                             </span>
                                         ) : systemKeys.hasSystemLeonardo ? (
                                             <span className="text-[11px] bg-slate-100 text-slate-600 border border-slate-200 px-2 py-0.5 rounded-full">
-                                                Using System Default Key
+                                                System Default Key
                                             </span>
                                         ) : (
                                             <span className="text-[11px] bg-amber-50 text-amber-700 border border-amber-200 px-2 py-0.5 rounded-full">
@@ -417,11 +461,37 @@ const Settings = () => {
                                         {showLeonardo ? <EyeOffIcon className="size-4" /> : <EyeIcon className="size-4" />}
                                     </button>
                                 </div>
-                                <p className="text-[11px] text-slate-400">Used for generating automated visual illustrations for AI posts.</p>
+
+                                {/* Live Leonardo Token Inspection Status Card */}
+                                {apiStatusResults?.leonardo && (
+                                    <div className={`p-3 rounded-xl border text-xs flex items-start gap-2.5 ${
+                                        apiStatusResults.leonardo.status === 'ACTIVE'
+                                            ? 'bg-purple-50/70 border-purple-200 text-purple-900'
+                                            : apiStatusResults.leonardo.status === 'EXHAUSTED'
+                                            ? 'bg-red-50 border-red-200 text-red-800'
+                                            : 'bg-amber-50 border-amber-200 text-amber-800'
+                                    }`}>
+                                        {apiStatusResults.leonardo.status === 'ACTIVE' ? (
+                                            <ZapIcon className="size-4 text-purple-600 shrink-0 mt-0.5" />
+                                        ) : apiStatusResults.leonardo.status === 'EXHAUSTED' ? (
+                                            <XCircleIcon className="size-4 text-red-600 shrink-0 mt-0.5" />
+                                        ) : (
+                                            <InfoIcon className="size-4 text-amber-600 shrink-0 mt-0.5" />
+                                        )}
+                                        <div className="flex-1">
+                                            <span className="font-semibold block">{apiStatusResults.leonardo.message}</span>
+                                            {apiStatusResults.leonardo.creditsRemaining !== undefined && (
+                                                <span className="text-[11px] text-purple-700 mt-0.5 block">
+                                                    Live API Balance: <strong>{apiStatusResults.leonardo.creditsRemaining} API Credits</strong> available for HD Image Generation.
+                                                </span>
+                                            )}
+                                        </div>
+                                    </div>
+                                )}
                             </div>
 
                             {/* 3. Zernio API Key */}
-                            <div className="space-y-2 pt-4 border-t border-slate-100">
+                            <div className="space-y-3 pt-6 border-t border-slate-100">
                                 <div className="flex items-center justify-between flex-wrap gap-2">
                                     <div className="flex items-center gap-2">
                                         <KeyIcon className="size-4 text-blue-500" />
@@ -434,7 +504,7 @@ const Settings = () => {
                                             </span>
                                         ) : systemKeys.hasSystemZernio ? (
                                             <span className="text-[11px] bg-slate-100 text-slate-600 border border-slate-200 px-2 py-0.5 rounded-full">
-                                                Using System Default Key
+                                                System Default Key
                                             </span>
                                         ) : (
                                             <span className="text-[11px] bg-amber-50 text-amber-700 border border-amber-200 px-2 py-0.5 rounded-full">
@@ -468,14 +538,30 @@ const Settings = () => {
                                         {showZernio ? <EyeOffIcon className="size-4" /> : <EyeIcon className="size-4" />}
                                     </button>
                                 </div>
-                                <p className="text-[11px] text-slate-400">Used for Social Media OAuth connects, account syncing, and scheduled post publishing.</p>
+
+                                {/* Live Zernio Inspection Status Card */}
+                                {apiStatusResults?.zernio && (
+                                    <div className={`p-3 rounded-xl border text-xs flex items-start gap-2.5 ${
+                                        apiStatusResults.zernio.status === 'ACTIVE'
+                                            ? 'bg-blue-50/70 border-blue-200 text-blue-900'
+                                            : 'bg-amber-50 border-amber-200 text-amber-800'
+                                    }`}>
+                                        <CheckCircle2Icon className="size-4 text-blue-600 shrink-0 mt-0.5" />
+                                        <div className="flex-1">
+                                            <span className="font-semibold block">{apiStatusResults.zernio.message}</span>
+                                            <span className="text-[11px] text-slate-500 mt-0.5 block">
+                                                Manages OAuth connections and background scheduler dispatch.
+                                            </span>
+                                        </div>
+                                    </div>
+                                )}
                             </div>
 
                             <div className="flex justify-end pt-4 border-t border-slate-100">
                                 <button
                                     type="submit"
                                     disabled={apiKeysSaving}
-                                    className="flex items-center gap-2 px-6 py-2.5 bg-red-500 hover:bg-red-600 text-white rounded-xl text-sm font-medium transition disabled:opacity-50"
+                                    className="flex items-center gap-2 px-6 py-2.5 bg-red-500 hover:bg-red-600 text-white rounded-xl text-sm font-medium transition disabled:opacity-50 shadow-sm"
                                 >
                                     {apiKeysSaving ? <Loader2Icon className="size-4 animate-spin" /> : <SaveIcon className="size-4" />}
                                     Save API Keys

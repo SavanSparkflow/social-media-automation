@@ -1,6 +1,7 @@
-import { CalendarDaysIcon, LayoutDashboard, LogOutIcon, RepeatIcon, SettingsIcon, UserIcon, Wand2Icon } from 'lucide-react'
+import { CalendarDaysIcon, CalendarRangeIcon, BrainCircuitIcon, LayoutDashboard, LogOutIcon, RepeatIcon, SettingsIcon, UserIcon, Wand2Icon } from 'lucide-react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import AICreditBadge from './AICreditBadge'
 
 const Sidebar = ({isOpen, setIsOpen} : {isOpen: boolean, setIsOpen: (val: boolean) => void}) => {
     
@@ -14,6 +15,8 @@ const Sidebar = ({isOpen, setIsOpen} : {isOpen: boolean, setIsOpen: (val: boolea
         {name: "Scheduler", icon: CalendarDaysIcon, path: "/schedule"},
         {name: "AI Composer", icon: Wand2Icon, path: "/ai-composer"},
         {name: "Repurposer", icon: RepeatIcon, path: "/repurpose"},
+        {name: "30D Campaign", icon: CalendarRangeIcon, path: "/campaign"},
+        {name: "Viral Decoder", icon: BrainCircuitIcon, path: "/competitor-decoder"},
         {name: "Settings", icon: SettingsIcon, path: "/settings"}
     ]
 
@@ -52,6 +55,11 @@ const Sidebar = ({isOpen, setIsOpen} : {isOpen: boolean, setIsOpen: (val: boolea
                 )
             })}
         </nav>
+
+        {/* AI Credits Widget in Sidebar */}
+        <div className='px-4 py-2'>
+            <AICreditBadge compact={true} />
+        </div>
 
         {/* user footer */}
         <div className='p-4 border-t border-slate-100'>

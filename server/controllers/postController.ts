@@ -36,6 +36,8 @@ const pollLeonardoJob = async (generationId: string, apikey: string) : Promise<s
     throw new Error("Leonardo.ai generation timed out.")
 }
 
+import { checkAndDeductAiCredits } from "./authController.js";
+
 // Generate post
 // POST /api/posts/generate
 export const generatePost = async (req: AuthRequest, res: Response): Promise<void> => {
@@ -45,15 +47,41 @@ export const generatePost = async (req: AuthRequest, res: Response): Promise<voi
         const apikey = req.user?.geminiApiKey || process.env.GEMINI_API_KEY;
 
         if (!apikey) {
-            res.status(400).json({ message: "Gemini API key is missing. Please configure it in Settings -> API Keys or add it to server/.env file." });
+            res.status(400).json({
+                isMissingKey: true,
+                message: "Gemini API key is missing. Please configure it in Settings -> API Keys or add it to server/.env file."
+            });
+            return;
+        }
+
+        // Check and deduct credit
+        const creditCheck = await checkAndDeductAiCredits(req.user._id, generateImage ? 2 : 1);
+        if (!creditCheck.allowed) {
+            res.status(403).json({
+                isQuotaExhausted: true,
+                creditsRemaining: creditCheck.remaining,
+                message: "⚠️ AI Generation Credits Exhausted (0 remaining). Please enter your free Google Gemini API Key in Settings -> API Keys for Unlimited Generations!"
+            });
             return;
         }
 
         const ai = new GoogleGenAI({ apiKey: apikey });
-        const textResponse = await ai.models.generateContent({
-            model: "gemini-2.5-flash",
-            contents: `Generate a social media post based on this prompt: "${prompt}". Tone: ${tone}. Include relevant hashtags. Format the response as JSON with "content" and "imagePrompt" fields. The "imagePrompt" should be a highly descriptive prompt for a image generator that complements the post.`,
-        })
+        let textResponse;
+        try {
+            textResponse = await ai.models.generateContent({
+                model: "gemini-2.5-flash",
+                contents: `Generate a social media post based on this prompt: "${prompt}". Tone: ${tone}. Include relevant hashtags. Format the response as JSON with "content" and "imagePrompt" fields. The "imagePrompt" should be a highly descriptive prompt for a image generator that complements the post.`,
+            });
+        } catch (aiErr: any) {
+            if (aiErr?.status === 429 || aiErr?.message?.includes("RESOURCE_EXHAUSTED") || aiErr?.message?.includes("quota") || aiErr?.message?.includes("429")) {
+                res.status(429).json({
+                    isQuotaExhausted: true,
+                    message: "⚡ Google Gemini AI Token Quota Exhausted. Please enter your personal Gemini API key in Settings -> API Keys for uninterrupted access."
+                });
+                return;
+            }
+            throw aiErr;
+        }
 
         let content = "";
         let imagePrompt = prompt;
@@ -126,12 +154,21 @@ export const generatePost = async (req: AuthRequest, res: Response): Promise<voi
         // Response to client
         res.status(201).json({
             message: "Post generated successfully",
-            generation
+            generation,
+            creditsRemaining: creditCheck.remaining,
+            isUnlimited: creditCheck.isUnlimited
         });
 
     } catch (error: any) {
         console.error(error);
-        res.status(500).json({ message: "Failed to generate post" });
+        if (error?.status === 429 || error?.message?.includes("RESOURCE_EXHAUSTED") || error?.message?.includes("quota")) {
+            res.status(429).json({
+                isQuotaExhausted: true,
+                message: "⚡ AI Token Quota Exhausted on current API Key. Please add your own personal API Key in Settings -> API Keys."
+            });
+            return;
+        }
+        res.status(500).json({ message: error.message || "Failed to generate post" });
     }
 }
 

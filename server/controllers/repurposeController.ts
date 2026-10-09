@@ -1,6 +1,7 @@
 import { Response } from "express";
 import { AuthRequest } from "../middlewares/authMiddleware.js";
 import { GoogleGenAI } from "@google/genai";
+import { checkAndDeductAiCredits } from "./authController.js";
 import axios from "axios";
 
 // Helper to scrape text from a web page
@@ -92,7 +93,19 @@ export const repurposeContent = async (req: AuthRequest, res: Response): Promise
         const apikey = req.user?.geminiApiKey || process.env.GEMINI_API_KEY;
         if (!apikey) {
             res.status(400).json({
+                isMissingKey: true,
                 message: "Gemini API key is missing. Please configure it in Settings -> API Keys or add it to server/.env.",
+            });
+            return;
+        }
+
+        // Check and deduct AI credits
+        const creditCheck = await checkAndDeductAiCredits(req.user._id, 2);
+        if (!creditCheck.allowed) {
+            res.status(403).json({
+                isQuotaExhausted: true,
+                creditsRemaining: creditCheck.remaining,
+                message: "⚠️ AI Generation Credits Exhausted (0 remaining). Please enter your free Google Gemini API Key in Settings -> API Keys for Unlimited Generations!"
             });
             return;
         }

@@ -1,45 +1,73 @@
-# 🚀 Social Media Automation & AI Scheduler
+# 🚀 Social Media Automation & AI Scheduler (SaaS)
 
-A modern, full-stack AI-powered social media management and post scheduling platform. Create engaging content with Google Gemini AI, generate visuals via Leonardo.ai, manage multiple social accounts (LinkedIn, Twitter/X, Instagram, Facebook), and schedule automated posts effortlessly.
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Vercel-blue?style=for-the-badge&logo=vercel)](https://social-media-automation-bice-two.vercel.app/)
+[![React](https://img.shields.io/badge/React%2019-Vite-61DAFB?style=for-the-badge&logo=react)](https://react.dev/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-v4-38B2AC?style=for-the-badge&logo=tailwind-css)](https://tailwindcss.com/)
+[![Node.js](https://img.shields.io/badge/Node.js-Express%205-339933?style=for-the-badge&logo=node.js)](https://nodejs.org/)
+[![MongoDB](https://img.shields.io/badge/MongoDB-Mongoose-47A248?style=for-the-badge&logo=mongodb)](https://www.mongodb.com/)
+[![Google Gemini](https://img.shields.io/badge/Google%20Gemini-2.5%20Flash-8E75B2?style=for-the-badge&logo=google)](https://ai.google.dev/)
+[![Leonardo.ai](https://img.shields.io/badge/Leonardo.ai-Visual%20Gen-FF5722?style=for-the-badge)](https://leonardo.ai/)
+
+A high-performance, full-stack AI-driven social media management and autonomous scheduling platform. Plan, write, generate AI visuals, repurpose multi-channel content, reverse-engineer competitor virality, and schedule automated publishing across **LinkedIn, Twitter/X, Instagram, and Facebook**.
+
+🌐 **Live Demo Website:** [https://social-media-automation-bice-two.vercel.app/](https://social-media-automation-bice-two.vercel.app/)
 
 ---
 
-## ✨ Features
+## 🌟 Key Highlights & Next-Gen AI Features
 
-- 🤖 **AI Post Composer**: Generate ready-to-publish social media captions tailored to specific tones (Professional, Creative, Funny, Minimalist, Excited) using **Google Gemini AI**.
-- 🎨 **AI Image Generation**: Automated image generation using **Leonardo.ai** and cloud storage integration with **Cloudinary**.
-- 🗂️ **Generations Management**:
-  - Filter generations by tone with instant counter badges.
-  - Custom pagination with configurable page size (10, 15, 20, 30, 40 per page).
-  - One-click post deletion and instant scheduling.
-- 🔗 **Multi-Platform Social OAuth**: Connect and sync accounts with **LinkedIn, Twitter/X, Instagram, and Facebook** powered by **Zernio API**.
-- ⏰ **Automated Post Scheduler**: Schedule posts with custom media (images/videos), dates, times, and target platforms. An automated background worker publishes posts on time using `node-cron`.
-- 🔑 **Bring Your Own API Keys (BYOK)**: Users can configure and securely store their own personal API keys (`GEMINI_API_KEY`, `LEONARDO_API_KEY`, `ZERNIO_API_KEY`) directly from the UI (Settings -> API Keys) with masked show/hide visibility toggles.
-- ⚙️ **User Profile & Security Settings**: Full profile name customization, customizable avatar color styles, and password management.
-- 🔐 **Secure Authentication**: User registration and login protected with JWT and bcrypt password hashing.
+### 1. 🤖 AI Post Composer & Visual Generator
+- **Multi-Tone AI Writing**: Generate viral captions tailored for custom tones (*Professional, Creative, Funny, Minimalist, Excited*) powered by **Google Gemini 2.5 Flash**.
+- **Leonardo.ai Visual Studio**: Automated high-resolution graphic generation with instant Cloudinary cloud uploads.
+- **Tone Filtering & Pagination**: Filter past generations by tone, search records, and delete or schedule directly in 1 click.
+
+### 2. 🔄 1-Click Multi-Platform Content Repurposer
+- Transform any **Blog URL, YouTube video link, or raw article text** into 5 distinct, platform-optimized formats in seconds:
+  - 🧵 **Twitter/X Viral Thread**: 5–7 hook-driven tweets.
+  - 💼 **LinkedIn Story / Carousel**: Formatted slide-ready breakdown.
+  - 📸 **Instagram Caption + Image Prompt**: High-engagement post with hashtag clouds.
+  - 👥 **Facebook Discussion Post**: Community-driven discussion starters.
+  - 🎬 **Short-form Video Hook / Script**: TikTok & Reels ready script outline.
+
+### 3. 📅 30-Day Auto-Pilot Campaign Planner
+- Input a simple 2-sentence brand summary (e.g. *"Organic Skincare Direct-to-Consumer Brand"*).
+- Generates a full **30-Day multi-channel social media roadmap** with themes, post copy, visual recommendations, and optimal publishing time slots.
+- **1-Click Batch Scheduler**: Auto-schedules all 30 posts straight into your calendar queue.
+
+### 4. 🕵️ Competitor Post "Reverse-Engineer" (Viral Decoder)
+- Paste any viral post link or copy from competitors.
+- AI deconstructs the **Psychological Hook Formula**, **Engagement Triggers**, and **Format Architecture**.
+- Automatically produces **3 unique, ready-to-publish variations** tailored specifically to your brand.
+
+### 5. 💳 Real-Time AI Credit & API Health Inspector
+- **Free Credit System**: Built-in 50-credit starter quota with real-time UI credit meters and low-credit notifications.
+- **BYOK (Bring Your Own Key)**: Input your own Gemini API Key for **Unlimited 100% Free Generations**.
+- **Live Multi-API Inspector**: In Settings, verify connection health and live balance for:
+  - 🟣 **Google Gemini**: Real-time RPM/TPM quota validation.
+  - 🎨 **Leonardo.ai**: Live token balance query via `GET /api/rest/v1/me`.
+  - 🔗 **Zernio Social API**: Social account sync and scheduling status.
+
+### 6. 🔗 Multi-Platform Social OAuth & Autonomous Scheduler
+- Connect accounts seamlessly: **LinkedIn, Twitter/X, Instagram, and Facebook**.
+- Autonomous background scheduler powered by `node-cron` ensuring zero missed posting windows.
+
+### 7. 📄 Complete Marketing & Legal Suite
+- **Product Pages**: `/features`, `/how-it-works`, `/pricing`, `/changelog`
+- **Company Pages**: `/about`, `/blog`, `/careers`, `/press`
+- **Legal Compliance**: `/privacy`, `/terms`, `/security`, `/cookies`
 
 ---
 
 ## 🛠️ Tech Stack
 
-### Frontend (`/client`)
-- **Framework**: React 19 + TypeScript + Vite
-- **Styling**: Tailwind CSS v4
-- **Icons**: Lucide React & Simple Icons
-- **Notifications**: React Hot Toast
-- **HTTP Client**: Axios
-- **Routing**: React Router v7
-
-### Backend (`/server`)
-- **Runtime**: Node.js + Express 5 + TypeScript (`tsx` / `nodemon`)
-- **Database**: MongoDB with Mongoose ODM
-- **AI Integrations**:
-  - `@google/genai` (Google Gemini 2.5 Flash)
-  - Leonardo.ai REST API
-- **Social Media API**: `@zernio/node` (Zernio Social API)
-- **Media Storage**: Cloudinary & Multer
-- **Background Tasks**: Node-Cron scheduler
-- **Authentication**: JSON Web Tokens (`jsonwebtoken`) & `bcrypt`
+| Layer | Technologies |
+|---|---|
+| **Frontend** | React 19, TypeScript, Vite, Tailwind CSS v4, Lucide Icons, Simple Icons, Axios, React Hot Toast, React Router v7 |
+| **Backend** | Node.js, Express 5, TypeScript (`tsx` / `nodemon`), Mongoose, Node-Cron, Cheerio (web scraping), Multer |
+| **Database** | MongoDB & MongoDB Atlas |
+| **AI Engines** | Google Gemini 2.5 Flash (`@google/genai`), Leonardo.ai REST API |
+| **Social API & Media** | Zernio Social OAuth Engine (`@zernio/node`), Cloudinary CDN |
+| **Security** | JWT Authentication, Bcrypt Password Hashing, Masked API Key Storage |
 
 ---
 
@@ -47,26 +75,47 @@ A modern, full-stack AI-powered social media management and post scheduling plat
 
 ```plaintext
 social-media-automation/
-├── client/                     # Frontend React application
+├── client/                          # React + TypeScript Frontend
 │   ├── src/
-│   │   ├── api/                # Axios instance & interceptors
-│   │   ├── assets/             # Static assets, platform configurations
-│   │   ├── components/         # Reusable UI components (Sidebar, Layout, Modal, etc.)
-│   │   ├── context/            # AuthContext and state providers
-│   │   ├── pages/              # Dashboard, AIComposer, Scheduler, Accounts, Login
-│   │   ├── App.tsx             # Route definitions
-│   │   └── main.tsx            # App entry point
+│   │   ├── api/                     # Axios instance & interceptors
+│   │   ├── assets/                  # Platform configs & branding
+│   │   ├── components/
+│   │   │   ├── AICreditBadge.tsx    # Real-time token meter & low-credit warnings
+│   │   │   ├── Home/                # Landing Navbar, Hero, Features, Footer, PublicLayout
+│   │   │   ├── Layout/              # Dashboard Sidebar, Header, Navigation
+│   │   │   └── ...                  # Modals, forms, badges
+│   │   ├── context/                 # AuthContext (Auth & live credit state)
+│   │   ├── pages/
+│   │   │   ├── Dashboard.tsx        # Analytics & quick launch
+│   │   │   ├── AIComposer.tsx       # AI prompt composer & Leonardo studio
+│   │   │   ├── ContentRepurposer.tsx# 1-Click 5-in-1 multi-format repurposer
+│   │   │   ├── CampaignPlanner.tsx  # 30-Day Auto-Pilot campaign planner
+│   │   │   ├── CompetitorDecoder.tsx# Competitor viral post reverse-engineer
+│   │   │   ├── Scheduler.tsx        # Post scheduler & calendar view
+│   │   │   ├── Accounts.tsx         # Social OAuth account manager
+│   │   │   ├── Settings.tsx         # Profile, BYOK & Live API Health Inspector
+│   │   │   ├── ...                  # Marketing & Legal pages
+│   │   ├── App.tsx                  # Client routing structure
+│   │   └── main.tsx                 # Entry point
 │   ├── package.json
 │   └── vite.config.ts
 │
-├── server/                     # Backend Express server
-│   ├── config/                 # DB, Cloudinary, Multer, Zernio configurations
-│   ├── controllers/            # Auth, Accounts, Posts, Activity, SocialAuth controllers
-│   ├── middlewares/            # JWT authentication middleware
-│   ├── models/                 # Mongoose models (User, Post, Account, Generation, Activity)
-│   ├── routes/                 # Express API routes
-│   ├── services/               # Background scheduler service (node-cron)
-│   ├── server.ts               # Server entry point
+├── server/                          # Express + TypeScript Backend
+│   ├── config/                      # MongoDB, Cloudinary, Multer, Zernio configs
+│   ├── controllers/
+│   │   ├── authController.ts        # Auth, BYOK keys, live credit & API health inspector
+│   │   ├── postController.ts        # AI generation & post scheduling
+│   │   ├── repurposeController.ts   # URL scraping & 5-format AI repurposing
+│   │   ├── campaignController.ts    # 30-day campaign planning & batch scheduling
+│   │   ├── competitorController.ts  # Viral post deconstruction & brand variations
+│   │   ├── accountsController.ts    # Connected social account management
+│   │   ├── socialAuthController.ts  # Zernio OAuth URL generation & sync
+│   │   └── activityController.ts    # Audit logs & history
+│   ├── middlewares/                 # JWT Authentication & error handlers
+│   ├── models/                      # User, Post, Account, Generation, Activity models
+│   ├── routes/                      # Express route endpoints
+│   ├── services/                    # Autonomous background scheduler (node-cron)
+│   ├── server.ts                    # Backend entry point
 │   └── package.json
 │
 └── README.md
@@ -74,19 +123,19 @@ social-media-automation/
 
 ---
 
-## ⚙️ Environment Variables Setup
+## ⚙️ Environment Variables
 
-Create a `.env` file in the `server` directory (`server/.env`):
+Create `.env` in the `server` directory (`server/.env`):
 
 ```env
 PORT=3000
 MONGODB_URL=mongodb://127.0.0.1:27017/scheduler
 JWT_SECRECT=your_jwt_secret_key
 
-# Social OAuth & Automation (Zernio)
+# Social OAuth & Autonomous Publishing
 ZERNIO_API_KEY=your_zernio_api_key
 
-# AI Content Generation
+# AI Content Generation Engines (System Defaults)
 GEMINI_API_KEY=your_google_gemini_api_key
 LEONARDO_API_KEY=your_leonardo_ai_api_key
 
@@ -96,65 +145,71 @@ CLOUDINARY_API_KEY=your_cloudinary_api_key
 CLOUDINARY_API_SECRET=your_cloudinary_api_secret
 ```
 
+Create `.env` in the `client` directory (`client/.env`):
+
+```env
+VITE_API_URL=http://localhost:3000/api
+```
+
 ---
 
-## 🚀 Getting Started
+## 🚀 Quickstart Guide
 
 ### Prerequisites
-- [Node.js](https://nodejs.org/) (v18+ recommended)
-- [MongoDB](https://www.mongodb.com/) running locally or MongoDB Atlas URI
+- **Node.js** (v18 or higher recommended)
+- **MongoDB** (Local instance or MongoDB Atlas)
 
-### 1. Backend Setup
-
+### 1. Run the Backend Server
 ```bash
-# Navigate to server directory
 cd server
-
-# Install dependencies
 npm install
-
-# Start server in development mode
 npm run server
 ```
+Server runs on `http://localhost:3000`.
 
-The backend will start on `http://localhost:3000`.
-
-### 2. Frontend Setup
-
+### 2. Run the Frontend App
 ```bash
-# Open a new terminal and navigate to client directory
 cd client
-
-# Install dependencies
 npm install
-
-# Start Vite dev server
 npm run dev
 ```
-
-The frontend will start on `http://localhost:5173`.
-
----
-
-## 📡 API Endpoints Overview
-
-| Method | Endpoint | Description | Auth Required |
-|---|---|---|---|
-| `POST` | `/api/auth/register` | Register new user | ❌ |
-| `POST` | `/api/auth/login` | Log in user and receive JWT | ❌ |
-| `GET` | `/api/oauth/:platform/url` | Get OAuth connection URL | ✅ |
-| `GET` | `/api/oauth/sync` | Sync connected accounts from Zernio | ✅ |
-| `GET` | `/api/accounts` | Fetch user's connected social accounts | ✅ |
-| `DELETE` | `/api/accounts/:id` | Disconnect a social account | ✅ |
-| `POST` | `/api/posts/generate` | Generate AI caption & image | ✅ |
-| `GET` | `/api/posts/generations` | Fetch history of AI generations | ✅ |
-| `DELETE` | `/api/posts/generations/:id` | Delete an AI generation | ✅ |
-| `GET` | `/api/posts` | Fetch scheduled/published posts | ✅ |
-| `POST` | `/api/posts` | Schedule a new post (supports multipart media) | ✅ |
-| `GET` | `/api/activity` | Get recent account activities & logs | ✅ |
+Client runs on `http://localhost:5173`.
 
 ---
 
-## 📝 License
+## 📡 Core API Endpoints
+
+| Category | Method | Endpoint | Description | Auth |
+|---|---|---|---|:---:|
+| **Auth & Credits** | `POST` | `/api/auth/register` | Register new user account | ❌ |
+| | `POST` | `/api/auth/login` | Log in and receive JWT token | ❌ |
+| | `GET` | `/api/auth/credits` | Get remaining AI credits & BYOK status | ✅ |
+| | `POST` | `/api/auth/api-keys/check-status`| Live quota & balance check for Gemini, Leonardo, Zernio | ✅ |
+| **Content & AI** | `POST` | `/api/posts/generate` | Generate AI caption & Leonardo.ai visual | ✅ |
+| | `POST` | `/api/posts/repurpose` | 1-Click repurpose link/text into 5 platform formats | ✅ |
+| | `POST` | `/api/posts/campaign/generate-30-days`| Generate complete 30-day marketing plan | ✅ |
+| | `POST` | `/api/posts/campaign/batch-schedule` | 1-Click batch schedule all 30 campaign posts | ✅ |
+| | `POST` | `/api/posts/competitor/reverse-engineer`| Deconstruct viral post and get 3 brand variations | ✅ |
+| | `GET` | `/api/posts/generations` | Fetch paginated AI generations history | ✅ |
+| **Scheduling** | `POST` | `/api/posts` | Schedule single post (with custom media) | ✅ |
+| | `GET` | `/api/posts` | Fetch scheduled / published post list | ✅ |
+| **Social Accounts**| `GET` | `/api/oauth/:platform/url` | Generate OAuth connection link | ✅ |
+| | `GET` | `/api/oauth/sync` | Sync active connected accounts from Zernio | ✅ |
+| | `GET` | `/api/accounts` | Get list of user's connected social channels | ✅ |
+
+---
+
+## 📬 Contact & Support
+
+For queries, business collaborations, or enterprise feature requests:
+
+- 👤 **Founder / Developer:** Savan
+- 📧 **Email:** [asavant151@gmail.com](mailto:asavant151@gmail.com)
+- 📞 **Phone / WhatsApp:** [+91 9737531475](tel:+919737531475)
+- 🌐 **Project Live URL:** [https://social-media-automation-bice-two.vercel.app/](https://social-media-automation-bice-two.vercel.app/)
+
+---
+
+## 📄 License
 
 This project is licensed under the [ISC License](LICENSE).

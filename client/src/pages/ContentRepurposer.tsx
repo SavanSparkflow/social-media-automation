@@ -17,6 +17,8 @@ import {
 import { SiX, SiFacebook, SiInstagram, SiYoutube } from "@icons-pack/react-simple-icons";
 import api from "../api/axios";
 import toast from "react-hot-toast";
+import { useAuth } from "../context/AuthContext";
+import AICreditBadge from "../components/AICreditBadge";
 
 const LinkedInIcon = (props: React.SVGProps<SVGSVGElement>) => (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="1em" height="1em" {...props}>
@@ -39,6 +41,7 @@ interface RepurposedData {
 
 export default function ContentRepurposer() {
     const navigate = useNavigate();
+    const { refreshCredits } = useAuth();
 
     // Input mode state
     const [inputType, setInputType] = useState<"url" | "youtube" | "text">("url");
@@ -105,9 +108,11 @@ export default function ContentRepurposer() {
             if (data?.data) {
                 setResult(data.data);
                 toast.success("Content repurposed successfully across 5 formats!");
+                refreshCredits();
             }
         } catch (error: any) {
             toast.error(error.response?.data?.message || error?.message || "Failed to repurpose content");
+            refreshCredits();
         } finally {
             setLoading(false);
         }
@@ -131,6 +136,9 @@ export default function ContentRepurposer() {
 
     return (
         <div className="p-4 sm:p-6 lg:p-8 max-w-6xl mx-auto">
+            {/* AI Credits Badge Banner */}
+            <AICreditBadge />
+
             {/* Header */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
                 <div>

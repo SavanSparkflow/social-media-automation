@@ -8,7 +8,9 @@ const UserSchema = new mongoose.Schema({
     zernioProfileId: { type: String },
     geminiApiKey: { type: String },
     leonardoApiKey: { type: String },
-    zernioApiKey: { type: String }
-}, { timestamps: true })
+    zernioApiKey: { type: String },
+    aiCredits: { type: Number, default: 50 },
+    aiCreditsMax: { type: Number, default: 50 },
+}, { timestamps: true });
 
 export const User = mongoose.model("User", UserSchema);

@@ -8,6 +8,8 @@ import Scheduler from "./pages/Scheduler";
 import AIComposer from "./pages/AIComposer";
 import Settings from "./pages/Settings";
 import ContentRepurposer from "./pages/ContentRepurposer";
+import CampaignPlanner from "./pages/CampaignPlanner";
+import CompetitorDecoder from "./pages/CompetitorDecoder";
 import { Toaster } from "react-hot-toast";
 
 // Public Informational Pages
@@ -61,6 +63,8 @@ export default function App() {
                     <Route path="/schedule" element={<Scheduler />} />
                     <Route path="/ai-composer" element={<AIComposer />} />
                     <Route path="/repurpose" element={<ContentRepurposer />} />
+                    <Route path="/campaign" element={<CampaignPlanner />} />
+                    <Route path="/competitor-decoder" element={<CompetitorDecoder />} />
                     <Route path="/settings" element={<Settings />} />
                 </Route>
             </Routes>
