@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react"
+import { useLocation } from "react-router-dom";
 import { PLATFORMS } from "../assets/assets";
 import {
   AlertCircleIcon,
@@ -25,6 +26,7 @@ const PLATFORM_LIMITS: Record<string, { name: string; limit: number }> = {
 };
 
 const Scheduler = () => {
+  const location = useLocation();
   const [posts, setPosts] = useState<any[]>([]);
   const [content, setContent] = useState("");
   const [scheduleDate, setScheduleDate] = useState("");
@@ -34,6 +36,15 @@ const Scheduler = () => {
   const [existingMediaUrl, setExistingMediaUrl] = useState<string | null>(null);
   const [removeMedia, setRemoveMedia] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (location.state?.initialContent) {
+      setContent(location.state.initialContent);
+    }
+    if (location.state?.initialPlatform) {
+      setSelectedPlatform([location.state.initialPlatform]);
+    }
+  }, [location.state]);
 
   // Edit post state
   const [editingPostId, setEditingPostId] = useState<string | null>(null);
