@@ -45,7 +45,7 @@ const Sidebar = ({ isOpen, setIsOpen }: { isOpen: boolean; setIsOpen: (val: bool
                 {/* Logo */}
                 <div className="p-6 pb-3">
                     <div className="text-xl tracking-tight text-slate-800 flex items-center justify-between">
-                        <div className="flex items-center gap-1.5 font-bold">
+                        <div className="flex items-center gap-1.5 font-medium">
                             <img src="/logo.svg" alt="logo" className="size-6" />
                             Scheduler
                         </div>
