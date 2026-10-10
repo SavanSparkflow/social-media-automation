@@ -1,0 +1,40 @@
+# robots.txt for Social Media Scheduler
+User-agent: *
+Allow: /
+Allow: /features
+Allow: /how-it-works
+Allow: /pricing
+Allow: /changelog
+Allow: /about
+Allow: /blog
+Allow: /careers
+Allow: /press
+Allow: /privacy
+Allow: /terms
+Allow: /security
+Allow: /cookies
+Allow: /login
+
+# Disallow private application dashboard and API routes
+Disallow: /dashboard/
+Disallow: /dashboard
+Disallow: /accounts/
+Disallow: /accounts
+Disallow: /schedule/
+Disallow: /schedule
+Disallow: /ai-composer/
+Disallow: /ai-composer
+Disallow: /repurpose/
+Disallow: /repurpose
+Disallow: /campaign/
+Disallow: /campaign
+Disallow: /competitor-decoder/
+Disallow: /competitor-decoder
+Disallow: /lead-magnets/
+Disallow: /lead-magnets
+Disallow: /settings/
+Disallow: /settings
+Disallow: /api/
+
+# Host and Sitemap
+Sitemap: https://socialscheduler.app/sitemap.xml

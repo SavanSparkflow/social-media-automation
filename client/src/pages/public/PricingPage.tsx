@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { CheckIcon, HelpCircle, Sparkles, Crown, Zap, ShieldCheck } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 import UpgradePlanModal from "../../components/UpgradePlanModal";
+import SEO from "../../components/common/SEO";
 
 export default function PricingPage() {
     const { isAuthenticated, plan: userPlan } = useAuth();
@@ -108,6 +109,23 @@ export default function PricingPage() {
 
     return (
         <div className="py-16 sm:py-20 px-4 sm:px-8 max-w-6xl mx-auto">
+            <SEO
+                title="Transparent Pricing & Plans"
+                description="Affordable pricing plans for creators and agencies. Start free or upgrade to Pro with Razorpay UPI & Cards. Bring your own Gemini API key for unlimited AI generation."
+                keywords="social media scheduler pricing, ai scheduler plans, cheap social media tool india, razorpay upi subscription"
+                jsonLd={{
+                    "@context": "https://schema.org",
+                    "@type": "FAQPage",
+                    "mainEntity": faqs.map(f => ({
+                        "@type": "Question",
+                        "name": f.q,
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": f.a
+                        }
+                    }))
+                }}
+            />
             {/* Header */}
             <div className="text-center max-w-3xl mx-auto mb-12">
                 <span className="text-xs font-semibold uppercase tracking-widest text-red-500 bg-red-50 px-3 py-1.5 rounded-full border border-red-100">

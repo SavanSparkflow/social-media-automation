@@ -1,8 +1,14 @@
 import { ShieldCheck, Lock, Eye, FileText } from "lucide-react";
+import SEO from "../../components/common/SEO";
 
 export default function PrivacyPage() {
     return (
         <div className="py-20 px-5 sm:px-8 max-w-4xl mx-auto">
+            <SEO
+                title="Privacy Policy"
+                description="Read our Privacy Policy to understand how Social Media Scheduler handles your account data, credentials, and API connections securely."
+                keywords="privacy policy, data privacy, social media scheduler security"
+            />
             {/* Header */}
             <div className="mb-12 border-b border-slate-100 pb-8">
                 <span className="text-xs font-semibold uppercase tracking-widest text-red-500 bg-red-50 px-3 py-1.5 rounded-full border border-red-100">

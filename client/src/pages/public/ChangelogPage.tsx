@@ -1,4 +1,5 @@
 import { Calendar, Tag, CheckCircle2 } from "lucide-react";
+import SEO from "../../components/common/SEO";
 
 export default function ChangelogPage() {
     const releases = [
@@ -41,6 +42,11 @@ export default function ChangelogPage() {
 
     return (
         <div className="py-20 px-5 sm:px-8 max-w-4xl mx-auto">
+            <SEO
+                title="Changelog & Product Releases"
+                description="Stay updated with new features, AI model integrations, and performance improvements in Social Media Scheduler."
+                keywords="product changelog, new features social scheduler, release notes"
+            />
             {/* Header */}
             <div className="text-center mb-16">
                 <span className="text-xs font-semibold uppercase tracking-widest text-red-500 bg-red-50 px-3 py-1.5 rounded-full border border-red-100">

@@ -3,13 +3,19 @@ import Sidebar from './Sidebar'
 import { Navigate, Outlet, useLocation } from 'react-router-dom'
 import { MenuIcon } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
+import SEO from './common/SEO'
 
 const pageTitles: Record<string, string> = {
     "/": "Home",
     "/dashboard": "Dashboard",
-    "/accounts": "Accounts",
-    "/schedule": "Scheduler",
-    "/ai-composer": "AI Composer"
+    "/accounts": "Connected Accounts",
+    "/schedule": "Schedule Posts",
+    "/ai-composer": "AI Post Composer",
+    "/repurpose": "Content Repurposer",
+    "/campaign": "Campaign Planner",
+    "/competitor-decoder": "Competitor Decoder",
+    "/lead-magnets": "Lead Magnet Studio",
+    "/settings": "Account & API Settings"
 }
 
 const Layout = () => {
@@ -36,6 +42,7 @@ const Layout = () => {
 
     return (
         <div className='flex h-screen bg-slate-50'>
+            <SEO title={title} noIndex={true} />
 
             {/* Mobile Overlay */}
             {isMobileMenuOpen && <div className='fixed inset-0 bg-slate-900/50 z-40 md:hidden' onClick={() => setIsMobileMenuOpen(false)} />}

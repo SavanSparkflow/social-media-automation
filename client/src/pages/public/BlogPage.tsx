@@ -1,4 +1,5 @@
 import { Calendar, Clock, ArrowRight } from "lucide-react";
+import SEO from "../../components/common/SEO";
 
 export default function BlogPage() {
     const posts = [
@@ -42,6 +43,12 @@ export default function BlogPage() {
 
     return (
         <div className="py-20 px-5 sm:px-8 max-w-6xl mx-auto">
+            <SEO
+                title="Blog - Social Media Automation Strategies & AI Tips"
+                description="Explore tips, strategies, and deep dives on AI workflows, social growth, and multi-platform automation on the Social Media Scheduler blog."
+                keywords="social media automation blog, ai scheduling tips, linkedin growth guide, ai marketing tutorials"
+                ogType="article"
+            />
             {/* Header */}
             <div className="text-center max-w-2xl mx-auto mb-16">
                 <span className="text-xs font-semibold uppercase tracking-widest text-red-500 bg-red-50 px-3 py-1.5 rounded-full border border-red-100">

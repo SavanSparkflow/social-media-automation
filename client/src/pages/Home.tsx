@@ -1,3 +1,4 @@
+import SEO from "../components/common/SEO";
 import Navbar from "../components/Home/Navbar";
 import Hero from "../components/Home/Hero";
 import Features from "../components/Home/Features";
@@ -10,6 +11,22 @@ import Footer from "../components/Home/Footer";
 export default function Landing() {
     return (
         <div className="min-h-screen bg-white text-slate-900 font-sans">
+            <SEO
+                title="AI Social Media Scheduler & Content Automation Tool"
+                description="Automate and schedule your social media posts across Instagram, Twitter, LinkedIn, and Facebook with AI. Repurpose viral content and decode competitor strategies."
+                keywords="ai social media scheduler, social media automation tool, auto post instagram, linkedin scheduler, ai caption generator, competitor analytics"
+                jsonLd={{
+                    "@context": "https://schema.org",
+                    "@type": "WebSite",
+                    "name": "Social Media Scheduler",
+                    "url": "https://socialscheduler.app/",
+                    "potentialAction": {
+                        "@type": "SearchAction",
+                        "target": "https://socialscheduler.app/features?q={search_term_string}",
+                        "query-input": "required name=search_term_string"
+                    }
+                }}
+            />
             <Navbar />
             <Hero />
             <Features />
@@ -21,3 +38,4 @@ export default function Landing() {
         </div>
     );
 }
+

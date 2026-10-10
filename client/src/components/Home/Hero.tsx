@@ -22,6 +22,7 @@ export default function Hero() {
                     Schedule smarter.
                     <br />
                     <span className="text-red-400 italic">Grow faster.</span>
+                    <span className="sr-only"> - AI Social Media Scheduler and Automation Platform</span>
                 </h1>
 
                 {/* Subheadline */}

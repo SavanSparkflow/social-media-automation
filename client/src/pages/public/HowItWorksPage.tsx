@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { Link2, Sparkles, CalendarClock, Send, ArrowRight, CheckCircle2 } from "lucide-react";
+import SEO from "../../components/common/SEO";
 
 export default function HowItWorksPage() {
     const steps = [
@@ -35,6 +36,11 @@ export default function HowItWorksPage() {
 
     return (
         <div className="py-20 px-5 sm:px-8 max-w-5xl mx-auto">
+            <SEO
+                title="How It Works - 4-Step Social Media Automation"
+                description="Learn how Social Media Scheduler automates your content lifecycle in 4 simple steps: Connect accounts, craft with AI, schedule calendar slots, and let autopilot publish."
+                keywords="how social media automation works, auto schedule posts tutorial, connect linkedin instagram x"
+            />
             {/* Header */}
             <div className="text-center max-w-2xl mx-auto mb-16">
                 <span className="text-xs font-semibold uppercase tracking-widest text-red-500 bg-red-50 px-3 py-1.5 rounded-full border border-red-100">

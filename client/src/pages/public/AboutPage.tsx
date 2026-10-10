@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { Sparkles, Users, Target, Heart, ArrowRight } from "lucide-react";
+import SEO from "../../components/common/SEO";
 
 export default function AboutPage() {
     const values = [
@@ -48,6 +49,11 @@ export default function AboutPage() {
 
     return (
         <div className="py-20 px-5 sm:px-8 max-w-5xl mx-auto">
+            <SEO
+                title="About Us - Empowering Modern Creators"
+                description="Discover the story and mission behind Social Media Scheduler. We empower creators and businesses to streamline content creation and amplify organic growth."
+                keywords="about social media scheduler, creator automation team, social media tech"
+            />
             {/* Header */}
             <div className="text-center max-w-3xl mx-auto mb-16">
                 <span className="text-xs font-semibold uppercase tracking-widest text-red-500 bg-red-50 px-3 py-1.5 rounded-full border border-red-100">

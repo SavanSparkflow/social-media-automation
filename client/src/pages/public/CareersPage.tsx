@@ -1,4 +1,5 @@
 import { MapPin, DollarSign, Clock, Sparkles, Heart, Rocket, Coffee, ArrowRight } from "lucide-react";
+import SEO from "../../components/common/SEO";
 
 export default function CareersPage() {
     const perks = [
@@ -41,6 +42,11 @@ export default function CareersPage() {
 
     return (
         <div className="py-20 px-5 sm:px-8 max-w-5xl mx-auto">
+            <SEO
+                title="Careers - Join Our Remote Team"
+                description="Explore job openings at Social Media Scheduler. We are hiring full-stack engineers, AI specialists, and customer success champions."
+                keywords="careers, remote tech jobs, frontend jobs, full stack developer hiring"
+            />
             {/* Header */}
             <div className="text-center max-w-2xl mx-auto mb-16">
                 <span className="text-xs font-semibold uppercase tracking-widest text-red-500 bg-red-50 px-3 py-1.5 rounded-full border border-red-100">

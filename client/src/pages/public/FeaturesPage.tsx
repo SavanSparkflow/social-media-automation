@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { Sparkles, Calendar, Layers, Image, ShieldCheck, Zap, BarChart3, CheckCircle2, ArrowRight } from "lucide-react";
+import SEO from "../../components/common/SEO";
 
 export default function FeaturesPage() {
     const features = [
@@ -43,6 +44,11 @@ export default function FeaturesPage() {
 
     return (
         <div className="py-20 px-5 sm:px-8 max-w-6xl mx-auto">
+            <SEO
+                title="Features & Capabilities"
+                description="Explore all features of Social Media Scheduler: AI Content Generation, Visual Studio, Multi-Platform Auto Scheduling, Competitor Decoder, and Analytics."
+                keywords="social media features, ai content scheduler features, auto posting tool, multi platform social scheduler"
+            />
             {/* Header */}
             <div className="text-center max-w-3xl mx-auto mb-16">
                 <span className="text-xs font-semibold uppercase tracking-widest text-red-500 bg-red-50 px-3 py-1.5 rounded-full border border-red-100">

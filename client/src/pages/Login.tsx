@@ -4,6 +4,7 @@ import { MailIcon, LockIcon, ArrowRightIcon, User2Icon, EyeIcon, EyeOffIcon } fr
 import { useAuth } from "../context/AuthContext";
 import api from "../api/axios";
 import toast from "react-hot-toast";
+import SEO from "../components/common/SEO";
 
 export default function Login() {
     const [loginState, setLoginState] = useState(true);
@@ -37,12 +38,17 @@ export default function Login() {
 
     return (
         <div className="min-h-screen bg-slate-100 flex items-center justify-center p-4">
+            <SEO
+                title={loginState ? "Sign In to Your Account" : "Create Your Free Account"}
+                description="Access your Social Media Scheduler dashboard. Auto-schedule posts, review analytics, and generate AI content."
+                keywords="login social media scheduler, register account, social automation signin"
+            />
             <div className="relative w-full max-w-md">
                 <div className="bg-white rounded-2xl shadow-sm p-8">
                     <div className="flex flex-col items-center mb-8">
                         <Link to="/" className="flex items-center gap-2">
-                            <img src="/logo.svg" alt="Logo" className="size-6.5" />
-                            <h1 className="text-2xl">Scheduler</h1>
+                            <img src="/logo.svg" alt="Social Media Scheduler Logo" className="size-6.5" />
+                            <h1 className="text-2xl font-bold">Scheduler</h1>
                         </Link>
                         <p className="text-slate-500 text-sm mt-1">Sign in to your Dashboard</p>
                     </div>

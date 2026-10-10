@@ -1,4 +1,5 @@
 import { ShieldCheck, KeyRound, Lock, Server, CheckCircle2, FileCode } from "lucide-react";
+import SEO from "../../components/common/SEO";
 
 export default function SecurityPage() {
     const pillars = [
@@ -26,6 +27,11 @@ export default function SecurityPage() {
 
     return (
         <div className="py-20 px-5 sm:px-8 max-w-5xl mx-auto">
+            <SEO
+                title="Security & Data Protection Standards"
+                description="Explore the enterprise-grade security architecture protecting your tokens, OAuth sessions, and media assets in Social Media Scheduler."
+                keywords="security standards, oauth encryption, api key protection"
+            />
             {/* Header */}
             <div className="text-center max-w-3xl mx-auto mb-16">
                 <span className="text-xs font-semibold uppercase tracking-widest text-red-500 bg-red-50 px-3 py-1.5 rounded-full border border-red-100">

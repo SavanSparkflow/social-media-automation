@@ -1,8 +1,14 @@
 import { Cookie, Shield, Settings } from "lucide-react";
+import SEO from "../../components/common/SEO";
 
 export default function CookiesPage() {
     return (
         <div className="py-20 px-5 sm:px-8 max-w-4xl mx-auto">
+            <SEO
+                title="Cookie Policy"
+                description="Understand how Social Media Scheduler uses essential and performance cookies to manage user authentication and app analytics."
+                keywords="cookie policy, tracking policy, analytics cookies"
+            />
             {/* Header */}
             <div className="mb-12 border-b border-slate-100 pb-8">
                 <span className="text-xs font-semibold uppercase tracking-widest text-red-500 bg-red-50 px-3 py-1.5 rounded-full border border-red-100">

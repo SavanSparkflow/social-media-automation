@@ -1,4 +1,5 @@
 import { Download, Mail, ExternalLink, Newspaper } from "lucide-react";
+import SEO from "../../components/common/SEO";
 
 export default function PressPage() {
     const pressReleases = [
@@ -24,6 +25,11 @@ export default function PressPage() {
 
     return (
         <div className="py-20 px-5 sm:px-8 max-w-5xl mx-auto">
+            <SEO
+                title="Press & Brand Media Kit"
+                description="Find official brand assets, logos, media kit, and press release coverage for Social Media Scheduler."
+                keywords="press kit, media assets, news releases social media scheduler"
+            />
             {/* Header */}
             <div className="text-center max-w-2xl mx-auto mb-16">
                 <span className="text-xs font-semibold uppercase tracking-widest text-red-500 bg-red-50 px-3 py-1.5 rounded-full border border-red-100">
