@@ -19,10 +19,10 @@ export default function Landing() {
                     "@context": "https://schema.org",
                     "@type": "WebSite",
                     "name": "Social Media Scheduler",
-                    "url": "https://socialscheduler.app/",
+                    "url": "https://social-media-automation-bice-two.vercel.app/",
                     "potentialAction": {
                         "@type": "SearchAction",
-                        "target": "https://socialscheduler.app/features?q={search_term_string}",
+                        "target": "https://social-media-automation-bice-two.vercel.app/features?q={search_term_string}",
                         "query-input": "required name=search_term_string"
                     }
                 }}

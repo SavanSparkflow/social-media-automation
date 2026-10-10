@@ -37,4 +37,4 @@ Disallow: /settings
 Disallow: /api/
 
 # Host and Sitemap
-Sitemap: https://socialscheduler.app/sitemap.xml
+Sitemap: https://social-media-automation-bice-two.vercel.app/sitemap.xml

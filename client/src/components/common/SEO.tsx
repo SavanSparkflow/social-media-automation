@@ -15,7 +15,7 @@ export interface SEOProps {
 const DEFAULT_TITLE = "Social Media Scheduler - AI-Powered Social Automation & Growth";
 const DEFAULT_DESC = "All-in-one AI-powered social media management and automation platform. Schedule posts, repurpose viral content, decode competitors, and grow across Instagram, X, LinkedIn, and Facebook.";
 const DEFAULT_OG_IMAGE = "/og-image.jpg";
-const BASE_URL = "https://socialscheduler.app";
+const BASE_URL = "https://social-media-automation-bice-two.vercel.app";
 
 function setOrCreateMeta(selector: string, attr: "name" | "property", attrValue: string, content: string) {
     let element = document.querySelector(selector) as HTMLMetaElement | null;
