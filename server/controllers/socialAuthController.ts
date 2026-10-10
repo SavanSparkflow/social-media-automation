@@ -110,7 +110,7 @@ export const syncAccounts = async (req: AuthRequest, res: Response): Promise<voi
                     handle: zAccount.username || zAccount.name || zAccount.handle || "Unknown",
                     zernioAccountId: zid,
                     status: "connected",
-                    avatarUrl: zAccount.avatarUrl || zAccount.picture || zAccount.profile_image_url,
+                    avatarUrl: zAccount.profilePicture || zAccount.picture || zAccount.profile_image_url,
                 },
                 { upsert: true, returnDocument: 'after' }
             )
