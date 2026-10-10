@@ -52,6 +52,9 @@ export const registerUser = async (req: Request, res: Response): Promise<void> =
             password: hashedPassword,
             aiCredits: 50,
             aiCreditsMax: 50,
+            plan: "free",
+            planBillingCycle: "none",
+            maxSocialAccounts: 1,
         });
 
         if (user) {
@@ -61,6 +64,10 @@ export const registerUser = async (req: Request, res: Response): Promise<void> =
                 email: user.email,
                 aiCredits: user.aiCredits,
                 aiCreditsMax: user.aiCreditsMax,
+                plan: user.plan || "free",
+                planBillingCycle: user.planBillingCycle || "none",
+                planExpiresAt: user.planExpiresAt,
+                maxSocialAccounts: user.maxSocialAccounts || 1,
                 hasCustomGeminiKey: false,
                 hasCustomLeonardoKey: false,
                 token: generateToken(user._id.toString()),
@@ -81,6 +88,9 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
         const { email, password } = req.body;
         const user = await User.findOne({ email });
         if (user && (await bcrypt.compare(password, user.password))) {
+            const isPlanExpired = user.planExpiresAt && new Date() > new Date(user.planExpiresAt);
+            const activePlan = isPlanExpired ? "free" : user.plan || "free";
+
             res.status(200).json({
                 _id: user._id,
                 name: user.name,
@@ -88,6 +98,10 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
                 avatarUrl: user.avatarUrl,
                 aiCredits: user.aiCredits !== undefined ? user.aiCredits : 50,
                 aiCreditsMax: user.aiCreditsMax || 50,
+                plan: activePlan,
+                planBillingCycle: user.planBillingCycle || "none",
+                planExpiresAt: user.planExpiresAt,
+                maxSocialAccounts: user.maxSocialAccounts || 1,
                 hasCustomGeminiKey: !!(user.geminiApiKey && user.geminiApiKey.trim().length > 5),
                 hasCustomLeonardoKey: !!(user.leonardoApiKey && user.leonardoApiKey.trim().length > 5),
                 token: generateToken(user._id.toString()),
@@ -111,11 +125,17 @@ export const getProfile = async (req: AuthRequest, res: Response): Promise<void>
             return;
         }
 
+        const isPlanExpired = user.planExpiresAt && new Date() > new Date(user.planExpiresAt);
+        const activePlan = isPlanExpired ? "free" : user.plan || "free";
+
         const userObj = user.toObject();
         res.status(200).json({
             ...userObj,
+            plan: activePlan,
+            isPlanExpired,
             aiCredits: user.aiCredits !== undefined ? user.aiCredits : 50,
             aiCreditsMax: user.aiCreditsMax || 50,
+            maxSocialAccounts: user.maxSocialAccounts || 1,
             hasCustomGeminiKey: !!(user.geminiApiKey && user.geminiApiKey.trim().length > 5),
             hasCustomLeonardoKey: !!(user.leonardoApiKey && user.leonardoApiKey.trim().length > 5),
         });
@@ -135,11 +155,19 @@ export const getCreditsStatus = async (req: AuthRequest, res: Response): Promise
             return;
         }
 
+        const isPlanExpired = user.planExpiresAt && new Date() > new Date(user.planExpiresAt);
+        const activePlan = isPlanExpired ? "free" : user.plan || "free";
+
         const isUnlimited = !!(user.geminiApiKey && user.geminiApiKey.trim().length > 5);
         const credits = user.aiCredits !== undefined ? user.aiCredits : 50;
         const maxCredits = user.aiCreditsMax || 50;
 
         res.status(200).json({
+            plan: activePlan,
+            isPlanExpired,
+            planExpiresAt: user.planExpiresAt,
+            planBillingCycle: user.planBillingCycle,
+            maxSocialAccounts: user.maxSocialAccounts || 1,
             aiCredits: credits,
             aiCreditsMax: maxCredits,
             isUnlimited,

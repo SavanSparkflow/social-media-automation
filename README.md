@@ -45,7 +45,16 @@ A high-performance, full-stack AI-driven social media management and autonomous 
 - **Interactive Live Simulator**: Test triggers and watch live keyword detection, public replies, and DM deliveries in real-time.
 - **Captured Leads CRM**: Search, filter, and 1-click **Export Leads to CSV**.
 
-### 6. 💳 Real-Time AI Credit & API Health Inspector
+### 6. 💳 Razorpay Payments & Subscription Gating
+- **Tier-Based Access Control**:
+  - 🆓 **Free Starter**: 50 Credits, 1 Social Account, Composer & Basic Scheduler.
+  - 🚀 **Pro Creator (₹499/mo or ₹4,999/yr)**: 500 Credits, 5 Accounts, Repurposer, 30D Autopilot, Viral Decoder.
+  - 👑 **Agency / Business (₹1,499/mo or ₹14,999/yr)**: 2,000 Credits, Unlimited Accounts, Lead Magnet Funnel Studio & CRM.
+  - 🪙 **Add-On Credit Packs**: Instant top-up packs starting from ₹99.
+- **Razorpay Checkout SDK**: Instant activation with UPI (GPay, PhonePe, Paytm), Cards, and NetBanking with HMAC-SHA256 signature verification.
+- **Graceful Feature Gating**: Non-subscribers get informative preview cards with 1-click Razorpay upgrade triggers.
+
+### 7. 💳 Real-Time AI Credit & API Health Inspector
 - **Free Credit System**: Built-in 50-credit starter quota with real-time UI credit meters and low-credit notifications.
 - **BYOK (Bring Your Own Key)**: Input your own Gemini API Key for **Unlimited 100% Free Generations**.
 - **Live Multi-API Inspector**: In Settings, verify connection health and live balance for:
@@ -53,11 +62,11 @@ A high-performance, full-stack AI-driven social media management and autonomous 
   - 🎨 **Leonardo.ai**: Live token balance query via `GET /api/rest/v1/me`.
   - 🔗 **Zernio Social API**: Social account sync and scheduling status.
 
-### 7. 🔗 Multi-Platform Social OAuth & Autonomous Scheduler
+### 8. 🔗 Multi-Platform Social OAuth & Autonomous Scheduler
 - Connect accounts seamlessly: **LinkedIn, Twitter/X, Instagram, and Facebook**.
 - Autonomous background scheduler powered by `node-cron` ensuring zero missed posting windows.
 
-### 8. 📄 Complete Marketing & Legal Suite
+### 9. 📄 Complete Marketing & Legal Suite
 - **Product Pages**: `/features`, `/how-it-works`, `/pricing`, `/changelog`
 - **Company Pages**: `/about`, `/blog`, `/careers`, `/press`
 - **Legal Compliance**: `/privacy`, `/terms`, `/security`, `/cookies`

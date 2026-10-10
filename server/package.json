@@ -25,7 +25,8 @@
     "mongoose": "^9.10.2",
     "morgan": "^1.12.1",
     "multer": "^2.4.0",
-    "node-cron": "^4.6.0"
+    "node-cron": "^4.6.0",
+    "razorpay": "^2.9.8"
   },
   "devDependencies": {
     "@types/bcrypt": "^6.0.0",

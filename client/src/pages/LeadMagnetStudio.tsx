@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import AICreditBadge from "../components/AICreditBadge";
+import FeatureGate from "../components/FeatureGate";
 import { useNavigate } from "react-router-dom";
 
 interface ICapturedLead {
@@ -305,7 +306,19 @@ export default function LeadMagnetStudio() {
 
     return (
         <div className="space-y-6 pb-12">
-            {/* Header */}
+            <FeatureGate
+                requiredPlan="agency"
+                featureName="🎁 'Comment & Get' Auto-Lead Magnet Funnel Studio"
+                featureDescription="Automatically detect comment keywords (e.g. 'GUIDE', 'PDF') on Instagram, Facebook & Twitter and send instant personalized DMs with download links."
+                benefits={[
+                    "🤖 AI Funnel Copilot (Viral Caption, Keywords, Rotating Public Replies, DM Copy)",
+                    "⚡ Real-Time Comment-to-DM Trigger Simulator Studio",
+                    "👥 Captured Hot Leads CRM & Status Tracking",
+                    "📥 1-Click Export Leads to CSV / Excel",
+                    "🚀 Explode organic reach by 10x with comment algorithm loops",
+                ]}
+            >
+                {/* Header */}
             <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 bg-gradient-to-r from-red-600 via-pink-600 to-rose-700 p-6 sm:p-8 rounded-2xl text-white shadow-lg relative overflow-hidden">
                 <div className="absolute top-0 right-0 -mt-8 -mr-8 w-64 h-64 bg-white/10 rounded-full blur-2xl pointer-events-none" />
                 <div className="relative z-10">
@@ -1049,6 +1062,7 @@ export default function LeadMagnetStudio() {
                     )}
                 </div>
             )}
+            </FeatureGate>
         </div>
     );
 }

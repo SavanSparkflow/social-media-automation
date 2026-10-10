@@ -19,6 +19,7 @@ import api from "../api/axios";
 import toast from "react-hot-toast";
 import { useAuth } from "../context/AuthContext";
 import AICreditBadge from "../components/AICreditBadge";
+import FeatureGate from "../components/FeatureGate";
 
 const LinkedInIcon = (props: React.SVGProps<SVGSVGElement>) => (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="1em" height="1em" {...props}>
@@ -136,8 +137,20 @@ export default function ContentRepurposer() {
 
     return (
         <div className="p-4 sm:p-6 lg:p-8 max-w-6xl mx-auto">
-            {/* AI Credits Badge Banner */}
-            <AICreditBadge />
+            <FeatureGate
+                requiredPlan="pro"
+                featureName="1-Click Multi-Format Content Repurposer"
+                featureDescription="Automatically repurpose any Blog, YouTube video link, or raw article into 5 distinct platform-optimized formats in seconds."
+                benefits={[
+                    "🧵 5-7 Hook-Driven Twitter/X Viral Threads",
+                    "💼 Formatted LinkedIn Story / Carousel Posts",
+                    "📸 Instagram Captions + AI Image Prompts",
+                    "👥 Community-Engaging Facebook Discussion Posts",
+                    "💡 Core Insight & Takeaway Extraction",
+                ]}
+            >
+                {/* AI Credits Badge Banner */}
+                <AICreditBadge />
 
             {/* Header */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
@@ -602,6 +615,7 @@ export default function ContentRepurposer() {
                     )}
                 </div>
             )}
+            </FeatureGate>
         </div>
     );
 }

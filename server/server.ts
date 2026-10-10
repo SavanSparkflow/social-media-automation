@@ -9,6 +9,7 @@ import AccountsRouter from "./routes/accountRoutes.js";
 import PostRouter from "./routes/postRoutes.js";
 import ActivityRouter from "./routes/activityRoutes.js";
 import leadMagnetRouter from "./routes/leadMagnetRoutes.js";
+import paymentRouter from "./routes/paymentRoutes.js";
 import { initScheduler } from "./services/schedulerService.js";
 
 const app = express();
@@ -36,6 +37,7 @@ app.use("/api/accounts", AccountsRouter);
 app.use("/api/posts", PostRouter);
 app.use("/api/activity", ActivityRouter);
 app.use("/api/lead-magnets", leadMagnetRouter);
+app.use("/api/payment", paymentRouter);
 
 // Initialize Scheduler
 initScheduler();

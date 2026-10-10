@@ -16,6 +16,7 @@ import api from "../api/axios";
 import toast from "react-hot-toast";
 import { useAuth } from "../context/AuthContext";
 import AICreditBadge from "../components/AICreditBadge";
+import FeatureGate from "../components/FeatureGate";
 
 const LinkedInIcon = (props: React.SVGProps<SVGSVGElement>) => (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="1em" height="1em" {...props}>
@@ -159,8 +160,20 @@ export default function CampaignPlanner() {
 
     return (
         <div className="p-4 sm:p-6 lg:p-8 max-w-6xl mx-auto">
-            {/* AI Credits Badge Banner */}
-            <AICreditBadge />
+            <FeatureGate
+                requiredPlan="pro"
+                featureName="30-Day Auto-Pilot Campaign Planner"
+                featureDescription="Generate an entire month's content strategy, copy, visual prompts, and batch schedule all 30 posts to your social calendar in 1 click."
+                benefits={[
+                    "📅 30 Days of Strategic Multi-Channel Posts",
+                    "🚀 1-Click Batch Schedule to Calendar",
+                    "🎯 Structured Weekly Themes & Hook Architecture",
+                    "🎨 Tailored Leonardo.ai Image Prompts per Day",
+                    "⚡ Multi-Account Simultaneous Publishing",
+                ]}
+            >
+                {/* AI Credits Badge Banner */}
+                <AICreditBadge />
 
             {/* Page Header */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
@@ -449,6 +462,7 @@ export default function CampaignPlanner() {
                     </div>
                 </div>
             )}
+            </FeatureGate>
         </div>
     );
 }

@@ -16,6 +16,7 @@ import api from "../api/axios";
 import toast from "react-hot-toast";
 import { useAuth } from "../context/AuthContext";
 import AICreditBadge from "../components/AICreditBadge";
+import FeatureGate from "../components/FeatureGate";
 
 interface DeconstructedData {
     analysis: {
@@ -110,8 +111,20 @@ export default function CompetitorDecoder() {
 
     return (
         <div className="p-4 sm:p-6 lg:p-8 max-w-6xl mx-auto">
-            {/* AI Credits Badge Banner */}
-            <AICreditBadge />
+            <FeatureGate
+                requiredPlan="pro"
+                featureName="Competitor Viral Post Reverse-Engineer"
+                featureDescription="Deconstruct viral posts into psychological hook formulas, engagement triggers, and generate 3 brand-customized variations ready to schedule."
+                benefits={[
+                    "🕵️ Psychological Hook Breakdown & Virality Scoring",
+                    "🔥 3 Brand-Customized Ready-to-Publish Variations",
+                    "🎯 Tone Adaptation & Structural Blueprints",
+                    "🚀 1-Click Direct Social Scheduling",
+                    "🎨 High-Converting AI Visual Prompts",
+                ]}
+            >
+                {/* AI Credits Badge Banner */}
+                <AICreditBadge />
 
             {/* Header */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
@@ -341,6 +354,7 @@ export default function CompetitorDecoder() {
                     </div>
                 </div>
             )}
+            </FeatureGate>
         </div>
     );
 }
